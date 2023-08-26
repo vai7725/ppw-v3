@@ -34,24 +34,26 @@ const Slider = () => {
           {slidesData.map((slide) => (
             <div
               key={slide.id}
-              className="flex-none w-full   h-[375px] rounded-md p-2  bg-gray-100"
+              className="flex-none w-full flex flex-col justify-between items-center h-[375px] rounded-md p-2  bg-indigo-100"
             >
-              <img
-                src="https://images.edexlive.com/uploads/user/imagelibrary/2020/9/9/original/15088382431447149306MDSUNEW.jpg?w=400&dpr=2.6"
-                alt={`Slide ${slide.id}`}
-                className="w-full aspect-video rounded-md  "
-              />
-              <div className="my-2">
-                <h2 className="text-[1.18rem] font-semibold">
-                  Maharshi Dayananda Saraswati University
-                </h2>
-                <p className="text-sm my-1">
-                  Maharshi Dayanand Saraswati University Ajmer is a prominent
-                  affiliating university in the state of Rajasthan. Established
-                  on August 1, 1987....
-                </p>
-                <button className="hero-btn">Select</button>
+              <div>
+                <img
+                  src="https://images.edexlive.com/uploads/user/imagelibrary/2020/9/9/original/15088382431447149306MDSUNEW.jpg?w=400&dpr=2.6"
+                  alt={`Slide ${slide.id}`}
+                  className="w-full aspect-video rounded-md  "
+                />
+                <div className="my-3">
+                  <h2 className="text-[1.18rem] font-semibold">
+                    Maharshi Dayananda Saraswati University
+                  </h2>
+                  <p className="text-sm my-1">
+                    Maharshi Dayanand Saraswati University Ajmer is a prominent
+                    affiliating university in the state of Rajasthan.
+                    Established on August 1, 1987....
+                  </p>
+                </div>
               </div>
+              <button className="hero-btn">Select</button>
             </div>
           ))}
         </div>

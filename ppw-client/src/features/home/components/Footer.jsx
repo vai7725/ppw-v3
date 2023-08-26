@@ -15,7 +15,7 @@ const Footer = () => {
           <p className="ml-2">previouspapers2023@gmail.com</p>
         </div>
         <p className="py-3 text-sm ">
-          &copy; 2023 previouspapers.netlify.app, All rights reserved
+          &copy; 2023 Previous Papers, All rights reserved
         </p>
       </div>
     </footer>
