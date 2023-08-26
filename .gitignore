@@ -1,2 +1,4 @@
 /ppw-client/node_modules
 /ppw-client/.env
+/ppw-server/node_modules
+/ppw-server/.env

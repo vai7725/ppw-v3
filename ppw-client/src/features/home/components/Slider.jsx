@@ -1,24 +1,40 @@
 // src/Slider.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import img1 from '../../../assets/form_bg_props.webp';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchUniversitiesAsync } from '../homeSlice';
+import LoadingPage from '../../../pages/LoadingPage';
 
-const slidesData = [{ id: 1, image: img1 }];
+const universityData = [{ id: 1, image: img1 }];
 
 const Slider = () => {
+  const dispatch = useDispatch();
+  const universityData = useSelector((state) => state.home.universities);
+  const status = useSelector((state) => state.home.status);
+  useEffect(() => {
+    dispatch(fetchUniversitiesAsync());
+  }, []);
+
   const [currentSlide, setCurrentSlide] = useState(0);
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? slidesData.length - 1 : prev - 1));
+    setCurrentSlide((prev) =>
+      prev === 0 ? universityData.length - 1 : prev - 1
+    );
   };
 
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === slidesData.length - 1 ? 0 : prev + 1));
+    setCurrentSlide((prev) =>
+      prev === universityData.length - 1 ? 0 : prev + 1
+    );
   };
+
+  if (status === 'loading') return <LoadingPage />;
 
   return (
     <div className="relative w-[90%] max-w-[400px]   mx-auto px-8 my-8">
-      {slidesData.length > 1 && (
+      {universityData.length > 1 && (
         <button
           className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-white  text-gray-800 p-1 rounded-full z-10"
           onClick={prevSlide}
@@ -31,26 +47,22 @@ const Slider = () => {
           className="flex transition-transform duration-500 linear transform"
           style={{ transform: `translateX(-${currentSlide * 100}%)` }}
         >
-          {slidesData.map((slide) => (
+          {universityData.map((university) => (
             <div
-              key={slide.id}
+              key={university._id}
               className="flex-none w-full flex flex-col justify-between items-center h-[375px] rounded-md p-2  bg-indigo-100"
             >
               <div>
                 <img
-                  src="https://images.edexlive.com/uploads/user/imagelibrary/2020/9/9/original/15088382431447149306MDSUNEW.jpg?w=400&dpr=2.6"
-                  alt={`Slide ${slide.id}`}
+                  src={university.cover}
+                  alt={`Slide ${university._id}`}
                   className="w-full aspect-video rounded-md  "
                 />
                 <div className="my-3">
                   <h2 className="text-[1.18rem] font-semibold">
-                    Maharshi Dayananda Saraswati University
+                    {university.title}
                   </h2>
-                  <p className="text-sm my-1">
-                    Maharshi Dayanand Saraswati University Ajmer is a prominent
-                    affiliating university in the state of Rajasthan.
-                    Established on August 1, 1987....
-                  </p>
+                  <p className="text-sm my-1">{university.description}</p>
                 </div>
               </div>
               <button className="hero-btn">Select</button>
@@ -58,7 +70,7 @@ const Slider = () => {
           ))}
         </div>
       </div>
-      {slidesData.length > 1 && (
+      {universityData.length > 1 && (
         <button
           className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-white  text-gray-800 p-2 rounded-full z-10"
           onClick={nextSlide}
