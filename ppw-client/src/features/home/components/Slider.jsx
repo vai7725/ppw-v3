@@ -5,8 +5,7 @@ import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUniversitiesAsync } from '../homeSlice';
 import LoadingPage from '../../../pages/LoadingPage';
-
-const universityData = [{ id: 1, image: img1 }];
+import { Link } from 'react-router-dom';
 
 const Slider = () => {
   const dispatch = useDispatch();
@@ -65,7 +64,12 @@ const Slider = () => {
                   <p className="text-sm my-1">{university.description}</p>
                 </div>
               </div>
-              <button className="hero-btn">Select</button>
+              <Link
+                to={`/papers/university/${university._id}`}
+                className="hero-btn text-center"
+              >
+                Select
+              </Link>
             </div>
           ))}
         </div>

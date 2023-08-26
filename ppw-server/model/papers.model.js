@@ -72,6 +72,7 @@ const paperSchema = new mongoose.Schema(
     file_link: {
       type: String,
       required: true,
+      unique: [true, 'File link must be unique'],
       trim: true,
     },
     downloads: {

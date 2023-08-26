@@ -1,58 +1,85 @@
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import {
-  ChevronDownIcon,
   MagnifyingGlassIcon,
   MinusIcon,
   PlusIcon,
 } from '@heroicons/react/20/solid';
 import Papers from './Papers';
-
-const filters = [
-  {
-    id: 'color',
-    name: 'Color',
-    options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false },
-    ],
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false },
-    ],
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true },
-    ],
-  },
-];
+import { useDispatch, useSelector } from 'react-redux';
+import LoadingPage from '../../../pages/LoadingPage';
+import { fetchCoursesAsync } from '../papersSlice';
+import { useParams } from 'react-router-dom';
+import { findMax } from '../../../utils/helper';
+import useCourseDuration from '../../../hooks/useCourseDuration';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function PapersSection() {
+  const dispatch = useDispatch();
+  const status = useSelector((state) => state.papers.status);
+  const courses = useSelector((state) => state.papers.courses);
+  const { universityId } = useParams();
+
+  useEffect(() => {
+    dispatch(fetchCoursesAsync(universityId));
+  }, []);
+
+  const courseOptions = courses.map((course) => {
+    return {
+      value: course.title,
+      label: course.title,
+      checked: false,
+    };
+  });
+
+  const [durationYearsOptions] = useCourseDuration(courses);
+
+  const filters = [
+    {
+      id: 'courses',
+      name: 'Courses',
+      options: courseOptions,
+      // options: [
+      //   { value: 'white', label: 'White', checked: false },
+      //   { value: 'beige', label: 'Beige', checked: false },
+      //   { value: 'blue', label: 'Blue', checked: false },
+      //   { value: 'brown', label: 'Brown', checked: false },
+      //   { value: 'green', label: 'Green', checked: false },
+      //   { value: 'purple', label: 'Purple', checked: false },
+      // ],
+    },
+    {
+      id: 'exam-year',
+      name: 'Exam year',
+      options: durationYearsOptions,
+      // options: [
+      //   { value: '1', label: '1st year', checked: false },
+      //   { value: '2', label: '2nd year', checked: false },
+      //   { value: '3', label: '3rd year', checked: false },
+      //   { value: '4', label: '4th year', checked: false },
+      // ],
+    },
+    {
+      id: 'subjects',
+      name: 'Subjects',
+      options: [
+        { value: '2l', label: '2L', checked: false },
+        { value: '6l', label: '6L', checked: false },
+        { value: '12l', label: '12L', checked: false },
+        { value: '18l', label: '18L', checked: false },
+        { value: '20l', label: '20L', checked: false },
+        { value: '40l', label: '40L', checked: false },
+      ],
+    },
+  ];
+
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+
+  if (status === 'loading') return <LoadingPage />;
 
   return (
     <div className="bg-white">
@@ -105,7 +132,7 @@ export default function PapersSection() {
                   <form className="mt-4 border-t border-gray-200">
                     <h3 className="sr-only">Categories</h3>
 
-                    {filters.map((section) => (
+                    {filters.map((section, i) => (
                       <Disclosure
                         as="div"
                         key={section.id}
