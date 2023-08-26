@@ -1,3 +1,7 @@
 .hero-heading {
   @apply text-2xl sm:text-3xl lg:text-4xl text-center font-semibold text-gray-800;
 }
+
+.hero-btn {
+  @apply bg-gray-800 text-white w-full p-1 rounded-md  hover:bg-gray-700;
+}

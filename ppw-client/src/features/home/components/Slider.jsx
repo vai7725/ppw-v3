@@ -50,9 +50,7 @@ const Slider = () => {
                   affiliating university in the state of Rajasthan. Established
                   on August 1, 1987....
                 </p>
-                <button className="bg-gray-800 text-white w-full p-1 rounded-md  hover:bg-gray-700">
-                  Select
-                </button>
+                <button className="hero-btn">Select</button>
               </div>
             </div>
           ))}
