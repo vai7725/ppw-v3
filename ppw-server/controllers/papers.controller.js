@@ -47,6 +47,21 @@ export const fetchUniversities = async (req, res) => {
   }
 };
 
+export const fetchUniversity = async (req, res) => {
+  const { universityId } = req.params;
+  try {
+    const university = await University.findById({ _id: universityId });
+    if (!university) {
+      return res
+        .status(404)
+        .json({ success: false, msg: 'University not found' });
+    }
+    return res.status(200).json({ success: true, university });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 // courses controllers
 export const saveCourse = async (req, res) => {
   try {
@@ -88,3 +103,55 @@ export const fetchCourses = async (req, res) => {
 };
 
 // papers controllers
+export const savePapers = async (req, res) => {
+  const { subject_title, exam_year, paper_year, file_link } = req.body;
+  try {
+    const paperExists = await Paper.findOne({
+      subject_title,
+      exam_year,
+      paper_year,
+      file_link,
+    });
+    if (paperExists) {
+      return res
+        .status(400)
+        .json({ success: false, msg: 'Paper already exists' });
+    }
+
+    const paper = await Paper.create(req.body);
+    if (!paper) {
+      return res
+        .status(500)
+        .json({ success: false, msg: 'Could not save paper' });
+    }
+    await paper.save();
+
+    return res
+      .status(200)
+      .json({ success: true, msg: 'Paper saved successfully.' });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const fetchPapers = async (req, res) => {
+  const { universityId, limit, page } = req.query;
+  console.log(req.query);
+  try {
+    const skip = (+page - 1) * +limit;
+    const papers = await Paper.find({ universityId }).skip(skip).limit(limit);
+    const paperTitles = await Paper.distinct(`subject_title`, {
+      universityId,
+    });
+    if (!papers) {
+      return res.status(404).json({ success: false, msg: 'No papers found' });
+    }
+    if (!paperTitles) {
+      return res.status(404).json({ success: false, msg: 'No titles found' });
+    }
+
+    return res.status(200).json({ success: true, papers, paperTitles });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};

@@ -11,7 +11,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import LoadingPage from '../../../pages/LoadingPage';
 import { fetchCoursesAsync } from '../papersSlice';
 import { useParams } from 'react-router-dom';
-import { findMax } from '../../../utils/helper';
 import useCourseDuration from '../../../hooks/useCourseDuration';
 
 function classNames(...classes) {
@@ -20,13 +19,14 @@ function classNames(...classes) {
 
 export default function PapersSection() {
   const dispatch = useDispatch();
-  const status = useSelector((state) => state.papers.status);
-  const courses = useSelector((state) => state.papers.courses);
+  const { status, courses, subjectTitles } = useSelector(
+    (state) => state.papers
+  );
   const { universityId } = useParams();
 
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
-  }, []);
+  }, [universityId, dispatch]);
 
   const courseOptions = courses.map((course) => {
     return {
@@ -66,20 +66,25 @@ export default function PapersSection() {
     {
       id: 'subjects',
       name: 'Subjects',
-      options: [
-        { value: '2l', label: '2L', checked: false },
-        { value: '6l', label: '6L', checked: false },
-        { value: '12l', label: '12L', checked: false },
-        { value: '18l', label: '18L', checked: false },
-        { value: '20l', label: '20L', checked: false },
-        { value: '40l', label: '40L', checked: false },
-      ],
+      options: subjectTitles.map((title) => {
+        return {
+          value: title,
+          label: title,
+          checked: false,
+        };
+      }),
+      // options: [
+      //   { value: '2l', label: '2L', checked: false },
+      //   { value: '6l', label: '6L', checked: false },
+      //   { value: '12l', label: '12L', checked: false },
+      //   { value: '18l', label: '18L', checked: false },
+      //   { value: '20l', label: '20L', checked: false },
+      //   { value: '40l', label: '40L', checked: false },
+      // ],
     },
   ];
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-
-  if (status === 'loading') return <LoadingPage />;
 
   return (
     <div className="bg-white">
@@ -301,7 +306,7 @@ export default function PapersSection() {
 
               {/* Product grid */}
               <div className="lg:col-span-3">
-                <Papers />
+                <Papers universityId={universityId} />
               </div>
             </div>
           </section>

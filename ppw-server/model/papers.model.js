@@ -60,7 +60,7 @@ const paperSchema = new mongoose.Schema(
       trim: true,
     },
     exam_year: {
-      type: String,
+      type: Number,
       required: true,
       trim: true,
     },
