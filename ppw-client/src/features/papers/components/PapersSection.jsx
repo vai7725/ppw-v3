@@ -3,86 +3,88 @@ import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import {
   MagnifyingGlassIcon,
-  MinusIcon,
-  PlusIcon,
+  ChevronUpIcon,
+  ChevronDownIcon,
 } from '@heroicons/react/20/solid';
 import Papers from './Papers';
 import { useDispatch, useSelector } from 'react-redux';
-import LoadingPage from '../../../pages/LoadingPage';
-import { fetchCoursesAsync } from '../papersSlice';
+import {
+  fetchCoursesAsync,
+  fetchExamYearsAsync,
+  fetchFilteredPapersAsync,
+  fetchPapersAsync,
+  fetchSubjectTitlesAsync,
+  updateFilters,
+  clearPapers,
+  clearFilters,
+} from '../papersSlice';
 import { useParams } from 'react-router-dom';
 import useCourseDuration from '../../../hooks/useCourseDuration';
+import { Controller, useForm } from 'react-hook-form';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function PapersSection() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
   const dispatch = useDispatch();
-  const { status, courses, subjectTitles } = useSelector(
-    (state) => state.papers
-  );
+  const {
+    courses,
+    examYears,
+    subjectTitles,
+    selectedFilters,
+    papersFiltered,
+    page,
+  } = useSelector((state) => state.papers);
   const { universityId } = useParams();
 
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
-  }, [universityId, dispatch]);
+  }, []);
 
   const courseOptions = courses.map((course) => {
     return {
-      value: course.title,
+      value: course._id,
       label: course.title,
       checked: false,
     };
   });
 
-  const [durationYearsOptions] = useCourseDuration(courses);
+  const [durationYearsOptions] = useCourseDuration(examYears);
 
-  const filters = [
-    {
-      id: 'courses',
-      name: 'Courses',
-      options: courseOptions,
-      // options: [
-      //   { value: 'white', label: 'White', checked: false },
-      //   { value: 'beige', label: 'Beige', checked: false },
-      //   { value: 'blue', label: 'Blue', checked: false },
-      //   { value: 'brown', label: 'Brown', checked: false },
-      //   { value: 'green', label: 'Green', checked: false },
-      //   { value: 'purple', label: 'Purple', checked: false },
-      // ],
-    },
-    {
-      id: 'exam-year',
-      name: 'Exam year',
-      options: durationYearsOptions,
-      // options: [
-      //   { value: '1', label: '1st year', checked: false },
-      //   { value: '2', label: '2nd year', checked: false },
-      //   { value: '3', label: '3rd year', checked: false },
-      //   { value: '4', label: '4th year', checked: false },
-      // ],
-    },
-    {
-      id: 'subjects',
-      name: 'Subjects',
-      options: subjectTitles.map((title) => {
-        return {
-          value: title,
-          label: title,
-          checked: false,
-        };
-      }),
-      // options: [
-      //   { value: '2l', label: '2L', checked: false },
-      //   { value: '6l', label: '6L', checked: false },
-      //   { value: '12l', label: '12L', checked: false },
-      //   { value: '18l', label: '18L', checked: false },
-      //   { value: '20l', label: '20L', checked: false },
-      //   { value: '40l', label: '40L', checked: false },
-      // ],
-    },
-  ];
+  const courseFilters = {
+    id: 'courseId',
+    name: 'Courses',
+    options: courseOptions,
+  };
+  const examYearFilters = {
+    id: 'exam_year',
+    name: 'Exam year',
+    options: durationYearsOptions,
+  };
+  const subjectTitleFilters = {
+    id: 'subject_title',
+    name: 'Subjects',
+    options: subjectTitles.map((title) => {
+      return {
+        value: title,
+        label: title,
+        checked: false,
+      };
+    }),
+  };
+
+  const handlefilters = (key, value) => {
+    dispatch(updateFilters({ [key]: value }));
+  };
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -135,65 +137,249 @@ export default function PapersSection() {
 
                   {/* Filters */}
                   <form className="mt-4 border-t border-gray-200">
-                    <h3 className="sr-only">Categories</h3>
-
-                    {filters.map((section, i) => (
-                      <Disclosure
-                        as="div"
-                        key={section.id}
-                        className="border-t border-gray-200 px-4 py-6"
-                      >
-                        {({ open }) => (
-                          <>
-                            <h3 className="-mx-2 -my-3 flow-root">
-                              <Disclosure.Button className="flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900">
-                                  {section.name}
-                                </span>
-                                <span className="ml-6 flex items-center">
-                                  {open ? (
-                                    <MinusIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
-                                  ) : (
-                                    <PlusIcon
-                                      className="h-5 w-5"
-                                      aria-hidden="true"
-                                    />
-                                  )}
-                                </span>
-                              </Disclosure.Button>
-                            </h3>
-                            <Disclosure.Panel className="pt-6">
-                              <div className="space-y-6">
-                                {section.options.map((option, optionIdx) => (
+                    {papersFiltered && (
+                      <div className=" p-2 flex justify-end items-center text-gray-700">
+                        <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            dispatch(clearPapers());
+                            dispatch(clearFilters());
+                            dispatch(fetchPapersAsync({ universityId, page }));
+                          }}
+                          className="underline font-semibold text-sm"
+                        >
+                          Clear search
+                        </button>
+                      </div>
+                    )}
+                    <Disclosure
+                      as="div"
+                      className="border-b border-gray-200 px-4 py-6"
+                    >
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                {courseFilters.name}
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <ChevronUpIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <ChevronDownIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            <div className="space-y-4">
+                              {courseFilters.options?.map(
+                                (option, optionIdx) => (
                                   <div
                                     key={option.value}
                                     className="flex items-center"
                                   >
                                     <input
-                                      id={`filter-mobile-${section.id}-${optionIdx}`}
-                                      name={`${section.id}[]`}
+                                      id={`filter-mobile-${courseFilters.id}-${optionIdx}`}
+                                      {...register(courseFilters.id)}
                                       defaultValue={option.value}
-                                      type="checkbox"
+                                      type="radio"
                                       defaultChecked={option.checked}
-                                      className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                      className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                      onClick={() => {
+                                        handlefilters(
+                                          courseFilters.id,
+                                          option.value
+                                        );
+
+                                        dispatch(
+                                          fetchExamYearsAsync({
+                                            universityId,
+                                            courseId: option.value,
+                                          })
+                                        );
+                                      }}
                                     />
+
                                     <label
-                                      htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                      className="ml-3 min-w-0 flex-1 text-gray-500"
+                                      htmlFor={`filter-mobile-${courseFilters.id}-${optionIdx}`}
+                                      className="ml-3 text-sm text-gray-600"
                                     >
                                       {option.label}
                                     </label>
                                   </div>
-                                ))}
+                                )
+                              )}
+                            </div>
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+
+                    <Disclosure
+                      as="div"
+                      className="border-b border-gray-200 px-4 py-6"
+                    >
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                {examYearFilters.name}
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <ChevronUpIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <ChevronDownIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            {examYearFilters.options.length > 0 ? (
+                              <div className="space-y-4">
+                                {examYearFilters.options?.map(
+                                  (option, optionIdx) => (
+                                    <div
+                                      key={option.value}
+                                      className="flex items-center"
+                                    >
+                                      <input
+                                        id={`filter-mobile-${examYearFilters.id}-${optionIdx}`}
+                                        {...register(examYearFilters.id)}
+                                        defaultValue={option.value}
+                                        type="radio"
+                                        defaultChecked={option.checked}
+                                        className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        onClick={() => {
+                                          handlefilters(
+                                            examYearFilters.id,
+                                            option.value
+                                          );
+                                          dispatch(
+                                            fetchSubjectTitlesAsync({
+                                              universityId,
+                                              courseId:
+                                                selectedFilters.courseId,
+                                              exam_year: option.value,
+                                            })
+                                          );
+                                        }}
+                                      />
+
+                                      <label
+                                        htmlFor={`filter-mobile-${examYearFilters.id}-${optionIdx}`}
+                                        className="ml-3 text-sm text-gray-600"
+                                      >
+                                        {option.label}
+                                      </label>
+                                    </div>
+                                  )
+                                )}
                               </div>
-                            </Disclosure.Panel>
-                          </>
-                        )}
-                      </Disclosure>
-                    ))}
+                            ) : (
+                              <p className="text-sm text-gray-400 ">
+                                Select course to see options
+                              </p>
+                            )}
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
+
+                    <Disclosure
+                      as="div"
+                      className="border-b border-gray-200 px-4 py-6"
+                    >
+                      {({ open }) => (
+                        <>
+                          <h3 className="-my-3 flow-root">
+                            <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                              <span className="font-medium text-gray-900">
+                                {subjectTitleFilters.name}
+                              </span>
+                              <span className="ml-6 flex items-center">
+                                {open ? (
+                                  <ChevronUpIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                ) : (
+                                  <ChevronDownIcon
+                                    className="h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                )}
+                              </span>
+                            </Disclosure.Button>
+                          </h3>
+                          <Disclosure.Panel className="pt-6">
+                            {subjectTitleFilters.options.length > 0 ? (
+                              <div className="space-y-4">
+                                {subjectTitleFilters.options?.map(
+                                  (option, optionIdx) => (
+                                    <div
+                                      key={option.value}
+                                      className="flex items-center"
+                                    >
+                                      <input
+                                        id={`filter-mobile-${subjectTitleFilters.id}-${optionIdx}`}
+                                        {...register(subjectTitleFilters.id)}
+                                        defaultValue={option.value}
+                                        type="radio"
+                                        defaultChecked={option.checked}
+                                        className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                        onClick={() => {
+                                          handlefilters(
+                                            subjectTitleFilters.id,
+                                            option.value
+                                          );
+                                          dispatch(
+                                            fetchFilteredPapersAsync({
+                                              universityId,
+                                              courseId:
+                                                selectedFilters.courseId,
+                                              exam_year:
+                                                selectedFilters.exam_year,
+                                              subject_title: option.value,
+                                            })
+                                          );
+                                        }}
+                                      />
+
+                                      <label
+                                        htmlFor={`filter-mobile-${subjectTitleFilters.id}-${optionIdx}`}
+                                        className="ml-3 text-sm text-gray-600"
+                                      >
+                                        {option.label}
+                                      </label>
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            ) : (
+                              <p className="text-sm text-gray-400 ">
+                                Select exam year to see options
+                              </p>
+                            )}
+                          </Disclosure.Panel>
+                        </>
+                      )}
+                    </Disclosure>
                   </form>
                 </Dialog.Panel>
               </Transition.Child>
@@ -243,67 +429,235 @@ export default function PapersSection() {
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
               <form className="hidden lg:block">
-                <h3 className="sr-only">Categories</h3>
+                {papersFiltered && (
+                  <div className="flex justify-start items-center text-gray-700">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        dispatch(clearPapers());
+                        dispatch(clearFilters());
+                        dispatch(fetchPapersAsync({ universityId, page }));
+                        reset();
+                      }}
+                      className="underline font-semibold text-sm"
+                    >
+                      Clear search
+                    </button>
+                  </div>
+                )}
 
-                {filters.map((section) => (
-                  <Disclosure
-                    as="div"
-                    key={section.id}
-                    className="border-b border-gray-200 py-6"
-                  >
-                    {({ open }) => (
-                      <>
-                        <h3 className="-my-3 flow-root">
-                          <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">
-                              {section.name}
-                            </span>
-                            <span className="ml-6 flex items-center">
-                              {open ? (
-                                <MinusIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              ) : (
-                                <PlusIcon
-                                  className="h-5 w-5"
-                                  aria-hidden="true"
-                                />
-                              )}
-                            </span>
-                          </Disclosure.Button>
-                        </h3>
-                        <Disclosure.Panel className="pt-6">
-                          <div className="space-y-4">
-                            {section.options.map((option, optionIdx) => (
-                              <div
-                                key={option.value}
-                                className="flex items-center"
+                <Disclosure as="div" className="border-b border-gray-200 py-6">
+                  {({ open }) => (
+                    <>
+                      <h3 className="-my-3 flow-root">
+                        <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                          <span className="font-medium text-gray-900">
+                            {courseFilters.name}
+                          </span>
+                          <span className="ml-6 flex items-center">
+                            {open ? (
+                              <ChevronUpIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <ChevronDownIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </span>
+                        </Disclosure.Button>
+                      </h3>
+                      <Disclosure.Panel className="pt-6">
+                        <div className="space-y-4">
+                          {courseFilters.options?.map((option, optionIdx) => (
+                            <div
+                              key={option.value}
+                              className="flex items-center"
+                            >
+                              <input
+                                id={`filter-${courseFilters.id}-${optionIdx}`}
+                                {...register(courseFilters.id)}
+                                defaultValue={option.value}
+                                type="radio"
+                                defaultChecked={option.checked}
+                                className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                onClick={() => {
+                                  handlefilters(courseFilters.id, option.value);
+
+                                  dispatch(
+                                    fetchExamYearsAsync({
+                                      universityId,
+                                      courseId: option.value,
+                                    })
+                                  );
+                                }}
+                              />
+
+                              <label
+                                htmlFor={`filter-${courseFilters.id}-${optionIdx}`}
+                                className="ml-3 text-sm text-gray-600"
                               >
-                                <input
-                                  id={`filter-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
-                                  defaultValue={option.value}
-                                  type="checkbox"
-                                  defaultChecked={option.checked}
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-                                />
-                                <label
-                                  htmlFor={`filter-${section.id}-${optionIdx}`}
-                                  className="ml-3 text-sm text-gray-600"
-                                >
-                                  {option.label}
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        </Disclosure.Panel>
-                      </>
-                    )}
-                  </Disclosure>
-                ))}
-              </form>
+                                {option.label}
+                              </label>
+                            </div>
+                          ))}
+                        </div>
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
 
+                <Disclosure as="div" className="border-b border-gray-200 py-6">
+                  {({ open }) => (
+                    <>
+                      <h3 className="-my-3 flow-root">
+                        <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                          <span className="font-medium text-gray-900">
+                            {examYearFilters.name}
+                          </span>
+                          <span className="ml-6 flex items-center">
+                            {open ? (
+                              <ChevronUpIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <ChevronDownIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </span>
+                        </Disclosure.Button>
+                      </h3>
+                      <Disclosure.Panel className="pt-6">
+                        {examYearFilters.options.length > 0 ? (
+                          <div className="space-y-4">
+                            {examYearFilters.options?.map(
+                              (option, optionIdx) => (
+                                <div
+                                  key={option.value}
+                                  className="flex items-center"
+                                >
+                                  <input
+                                    id={`filter-${examYearFilters.id}-${optionIdx}`}
+                                    {...register(examYearFilters.id)}
+                                    defaultValue={option.value}
+                                    type="radio"
+                                    defaultChecked={option.checked}
+                                    className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    onClick={() => {
+                                      handlefilters(
+                                        examYearFilters.id,
+                                        option.value
+                                      );
+                                      dispatch(
+                                        fetchSubjectTitlesAsync({
+                                          universityId,
+                                          courseId: selectedFilters.courseId,
+                                          exam_year: option.value,
+                                        })
+                                      );
+                                    }}
+                                  />
+
+                                  <label
+                                    htmlFor={`filter-${examYearFilters.id}-${optionIdx}`}
+                                    className="ml-3 text-sm text-gray-600"
+                                  >
+                                    {option.label}
+                                  </label>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-400 ">
+                            Select course to see options
+                          </p>
+                        )}
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+
+                <Disclosure as="div" className="border-b border-gray-200 py-6">
+                  {({ open }) => (
+                    <>
+                      <h3 className="-my-3 flow-root">
+                        <Disclosure.Button className="flex w-full items-center justify-between bg-white py-3 text-sm text-gray-400 hover:text-gray-500">
+                          <span className="font-medium text-gray-900">
+                            {subjectTitleFilters.name}
+                          </span>
+                          <span className="ml-6 flex items-center">
+                            {open ? (
+                              <ChevronUpIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            ) : (
+                              <ChevronDownIcon
+                                className="h-5 w-5"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </span>
+                        </Disclosure.Button>
+                      </h3>
+                      <Disclosure.Panel className="pt-6">
+                        {subjectTitleFilters.options.length > 0 ? (
+                          <div className="space-y-4">
+                            {subjectTitleFilters.options?.map(
+                              (option, optionIdx) => (
+                                <div
+                                  key={option.value}
+                                  className="flex items-center"
+                                >
+                                  <input
+                                    id={`filter-${subjectTitleFilters.id}-${optionIdx}`}
+                                    {...register(subjectTitleFilters.id)}
+                                    defaultValue={option.value}
+                                    type="radio"
+                                    defaultChecked={option.checked}
+                                    className="h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
+                                    onClick={() => {
+                                      handlefilters(
+                                        subjectTitleFilters.id,
+                                        option.value
+                                      );
+                                      dispatch(
+                                        fetchFilteredPapersAsync({
+                                          universityId,
+                                          courseId: selectedFilters.courseId,
+                                          exam_year: selectedFilters.exam_year,
+                                          subject_title: option.value,
+                                        })
+                                      );
+                                    }}
+                                  />
+
+                                  <label
+                                    htmlFor={`filter-${subjectTitleFilters.id}-${optionIdx}`}
+                                    className="ml-3 text-sm text-gray-600"
+                                  >
+                                    {option.label}
+                                  </label>
+                                </div>
+                              )
+                            )}
+                          </div>
+                        ) : (
+                          <p className="text-sm text-gray-400 ">
+                            Select exam year to see options
+                          </p>
+                        )}
+                      </Disclosure.Panel>
+                    </>
+                  )}
+                </Disclosure>
+              </form>
               {/* Product grid */}
               <div className="lg:col-span-3">
                 <Papers universityId={universityId} />

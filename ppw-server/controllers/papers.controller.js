@@ -135,22 +135,99 @@ export const savePapers = async (req, res) => {
 };
 
 export const fetchPapers = async (req, res) => {
-  const { universityId, limit, page } = req.query;
-  console.log(req.query);
+  const { universityId, page } = req.query;
   try {
+    const limit = 30;
     const skip = (+page - 1) * +limit;
     const papers = await Paper.find({ universityId }).skip(skip).limit(limit);
-    const paperTitles = await Paper.distinct(`subject_title`, {
-      universityId,
-    });
     if (!papers) {
       return res.status(404).json({ success: false, msg: 'No papers found' });
     }
+
+    return res.status(200).json({
+      success: true,
+      papers,
+      papersFiltered: false,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const fetchExamYears = async (req, res) => {
+  try {
+    const examYears = await Paper.distinct(`exam_year`, {
+      ...req.params,
+      ...req.query,
+    });
+
+    const papers = await Paper.find({ ...req.params, ...req.query });
+
+    if (!examYears) {
+      return res
+        .status(404)
+        .json({ success: false, msg: 'No exam_years found' });
+    }
+
+    if (!papers) {
+      return res.status(404).json({ success: false, msg: 'No papers found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      examYears,
+      papers,
+      papersFiltered: true,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const fetchSubjectTitles = async (req, res) => {
+  try {
+    const paperTitles = await Paper.distinct(`subject_title`, {
+      ...req.params,
+      ...req.query,
+    });
+
+    const papers = await Paper.find({ ...req.params, ...req.query });
+
     if (!paperTitles) {
       return res.status(404).json({ success: false, msg: 'No titles found' });
     }
 
-    return res.status(200).json({ success: true, papers, paperTitles });
+    if (!papers) {
+      return res.status(404).json({ success: false, msg: 'No papers found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      paperTitles,
+      papers,
+      papersFiltered: true,
+    });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const fetchFilteredPapers = async (req, res) => {
+  try {
+    const papers = await Paper.find({
+      ...req.params,
+      ...req.query,
+    });
+
+    if (!papers) {
+      return res.status(404).json({ success: false, msg: 'No papers found' });
+    }
+
+    return res.status(200).json({
+      success: true,
+      papers,
+      papersFiltered: true,
+    });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }

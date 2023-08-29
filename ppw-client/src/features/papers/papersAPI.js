@@ -33,8 +33,55 @@ export const fetchPapers = (universityId, page) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = API.get(`/api/papers`, {
-        params: { universityId, limit: 30, page },
+        params: { limit: 30, page, universityId },
       });
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const fetchExamYears = (universityId, courseId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.get(`/api/exam-years/${courseId}`, {
+        params: { universityId },
+      });
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const fetchSubjectTitles = (universityId, courseId, exam_year) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.get(`/api/subject-titles/${courseId}/${exam_year}`, {
+        params: { universityId },
+      });
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const fetchFilteredPapers = (
+  universityId,
+  courseId,
+  exam_year,
+  subject_title
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.get(
+        `/api/papers/${courseId}/${exam_year}/${subject_title}`,
+        {
+          params: { universityId },
+        }
+      );
       return resolve(res);
     } catch (error) {
       return reject(error);

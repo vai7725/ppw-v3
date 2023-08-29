@@ -1,13 +1,3 @@
-export const findMax = (arr) => {
-  let num = 0;
-  for (let i = 0; i < arr.length; i++) {
-    if (arr[i] > num) {
-      num = arr[i];
-    }
-  }
-  return num;
-};
-
 export const examYearObj = () => {
   return {
     1: '1st year',
@@ -15,4 +5,9 @@ export const examYearObj = () => {
     3: '3rd year',
     4: '4th year',
   };
+};
+
+export const idExtractor = (link) => {
+  const id = link.split('/')[5];
+  return id;
 };
