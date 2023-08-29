@@ -19,7 +19,7 @@ import {
   clearFilters,
 } from '../papersSlice';
 import { useParams } from 'react-router-dom';
-import useCourseDuration from '../../../hooks/useCourseDuration';
+import useCourseDuration from '../../../utils/useCourseDuration';
 import { Controller, useForm } from 'react-hook-form';
 
 function classNames(...classes) {
@@ -37,6 +37,7 @@ export default function PapersSection() {
   } = useForm();
   const dispatch = useDispatch();
   const {
+    university,
     courses,
     examYears,
     subjectTitles,
@@ -87,6 +88,9 @@ export default function PapersSection() {
   };
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  useEffect(() => {
+    document.title = `Previous year question papers | ${university.title} old papers | ${university.title} paper pattern | ${university.title} b sc bed old papers | ${university.title} ba bed old papers | ${university.title} previous year questions papers`;
+  }, []);
 
   return (
     <div className="bg-white">

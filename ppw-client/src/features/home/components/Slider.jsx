@@ -1,6 +1,5 @@
 // src/Slider.js
 import React, { useEffect, useState } from 'react';
-import img1 from '../../../assets/form_bg_props.webp';
 import { ChevronRightIcon, ChevronLeftIcon } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUniversitiesAsync } from '../homeSlice';
