@@ -232,3 +232,25 @@ export const fetchFilteredPapers = async (req, res) => {
     return res.status(500).json({ success: false, msg: error.message });
   }
 };
+
+export const updatePaperViews = async (req, res) => {
+  const { paperId } = req.params;
+  try {
+    const paper = await Paper.findOneAndUpdate(
+      { _id: paperId },
+      { $inc: { views: 1 } }
+    );
+
+    if (!paper) {
+      return res
+        .status(404)
+        .json({ success: false, msg: `No paper found with the id ${paperId}` });
+    }
+
+    return res
+      .status(200)
+      .json({ success: true, msg: 'Views updated successfully.' });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};

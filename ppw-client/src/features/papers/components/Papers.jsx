@@ -1,14 +1,20 @@
 import { useDispatch, useSelector } from 'react-redux';
 import paperCover from '../../../assets/paper-cover.jpeg';
 import { useEffect } from 'react';
-import { fetchPapersAsync, fetchUniversityAsync } from '../papersSlice';
+import {
+  fetchPapersAsync,
+  fetchUniversityAsync,
+  updatePaperViewsAsync,
+} from '../papersSlice';
 import LoadingPage from '../../../pages/LoadingPage';
 import { examYearObj, idExtractor } from '../../../utils/helper';
 import InfiniteScroll from 'react-infinite-scroll-component';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Papers({ universityId }) {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { papers, courses, university, page, hasMorePages, errorMsg } =
     useSelector((state) => state.papers);
 
@@ -52,17 +58,23 @@ export default function Papers({ universityId }) {
                 _id,
                 subject_title,
                 courseId,
-                universityId,
                 exam_year,
                 paper_year,
                 file_link,
               }) => (
-                <div
+                <a
                   key={_id}
-                  className="group relative flex flex-col justify-between p-1 bg-indigo-100 rounded"
+                  className="group relative  justify-between p-1 bg-indigo-100 rounded cursor-pointer"
+                  onClick={() => {
+                    dispatch(
+                      updatePaperViewsAsync({ paperId: _id, file_link })
+                    );
+                  }}
+                  href={file_link}
+                  target="_blank"
                 >
-                  <div>
-                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md ">
+                  <div className="flex h-full flex-col">
+                    <div className="aspect-h-1  aspect-w-1 w-full overflow-hidden rounded-md ">
                       <div
                         alt={subject_title}
                         className="h-full w-full  flex flex-col justify-between items-center  object-cover object-center  rounded-sm"
@@ -74,29 +86,21 @@ export default function Papers({ universityId }) {
                         />
                       </div>
                     </div>
-                    <div className=" flex flex-col justify-between ">
-                      <h2 className="text-md font-semibold text-gray-700">
-                        <a
-                          href={`https://drive.google.com/u/0/uc?id=${idExtractor(
-                            file_link
-                          )}&export=download`}
-                        >
-                          <span
-                            aria-hidden="true"
-                            className="absolute inset-0"
-                          />
-                          {subject_title}
-                        </a>
+                    <div className=" flex flex-col justify-between   h-full">
+                      <h2 className="text-md text-left font-semibold text-gray-700">
+                        {subject_title}
                       </h2>
-                      <p className="mt-1 text-sm text-gray-500">
-                        {courseNames[courseId]} - {examYears[exam_year]}
-                      </p>
-                      <p className="text-sm font-semibold text-gray-500">
-                        {paper_year}
-                      </p>
+                      <div>
+                        <p className="mt-1 text-sm text-gray-500">
+                          {courseNames[courseId]} - {examYears[exam_year]}
+                        </p>
+                        <p className="text-sm font-semibold text-gray-500">
+                          {paper_year}
+                        </p>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </a>
               )
             )}
           </InfiniteScroll>

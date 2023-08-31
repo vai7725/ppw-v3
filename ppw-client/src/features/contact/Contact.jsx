@@ -1,14 +1,29 @@
-import { useState } from 'react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { Switch } from '@headlessui/react';
+import { useDispatch, useSelector } from 'react-redux';
+import { useForm } from 'react-hook-form';
+import { postContactQueryAsync } from './contactSlice';
+import { Toaster, toast } from 'react-hot-toast';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
 }
 
 export default function Contact() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    control,
+    reset,
+    formState: { errors },
+  } = useForm();
+
+  const dispatch = useDispatch();
+  const { status } = useSelector((state) => state.contact);
+
   return (
     <div className=" bg-white px-6 py-12  lg:px-8">
+      <Toaster position="top-center" reverseOrder={false} />
+
       <div
         className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]"
         aria-hidden="true"
@@ -29,7 +44,25 @@ export default function Contact() {
           Get in Touch for Inquiries, Collaborations, or Support.
         </p>
       </div>
-      <form className="mx-auto mt-12 max-w-xl ">
+      <form
+        className="mx-auto mt-12 max-w-xl "
+        onSubmit={handleSubmit((data) => {
+          console.log(data);
+          toast.promise(dispatch(postContactQueryAsync(data)), {
+            loading: 'Saving your query...',
+            success: (
+              <h3 className="text-gray-800 text-lg font-semibold">
+                Your query has been submitted successfully
+              </h3>
+            ),
+            error: (
+              <h3 className="text-gray-800 text-lg text-red font-semibold">
+                Some error occured. Please try again later
+              </h3>
+            ),
+          });
+        })}
+      >
         <div className="grid grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-2">
           <div className="col-span-2">
             <label
@@ -42,7 +75,7 @@ export default function Contact() {
             <div className="mt-2.5">
               <input
                 type="text"
-                name="first-name"
+                {...register('name')}
                 id="first-name"
                 autoComplete="given-name"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -60,13 +93,14 @@ export default function Contact() {
             <div className="mt-2.5">
               <input
                 type="email"
-                name="email"
+                {...register('email')}
                 id="email"
                 autoComplete="email"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
               />
             </div>
           </div>
+
           <div className="col-span-2">
             <label
               htmlFor="university"
@@ -77,7 +111,7 @@ export default function Contact() {
             <div className="mt-2.5">
               <input
                 type="text"
-                name="university"
+                {...register('university')}
                 id="university"
                 autoComplete="email"
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
@@ -94,7 +128,7 @@ export default function Contact() {
             </label>
             <div className="mt-2.5">
               <textarea
-                name="message"
+                {...register('message')}
                 id="message"
                 rows={4}
                 className="block w-full rounded-md border-0 px-3.5 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"

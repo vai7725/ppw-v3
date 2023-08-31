@@ -6,6 +6,7 @@ import {
   fetchPapers,
   fetchSubjectTitles,
   fetchUniversity,
+  updatePaperViews,
 } from './papersAPI';
 
 const initialState = {
@@ -75,6 +76,14 @@ export const fetchFilteredPapersAsync = createAsyncThunk(
       exam_year,
       subject_title
     );
+    return res.data;
+  }
+);
+
+export const updatePaperViewsAsync = createAsyncThunk(
+  'papers/updatePaperViews',
+  async ({ paperId, file_link }) => {
+    const res = await updatePaperViews(paperId, file_link);
     return res.data;
   }
 );

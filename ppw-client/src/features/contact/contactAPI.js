@@ -7,10 +7,11 @@ const API = axios.create({
   },
 });
 
-export const fetchUniversities = () => {
+export const postContactQuery = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = API.get('/api/universities');
+      const res = await API.post('/contact', data);
+      console.log(res);
       return resolve(res);
     } catch (error) {
       return reject(error);

@@ -10,6 +10,7 @@ import {
   saveCourse,
   savePapers,
   saveUniversity,
+  updatePaperViews,
 } from '../controllers/papers.controller.js';
 
 const router = express.Router();
@@ -24,6 +25,8 @@ router.route('/courses').post(saveCourse).get(fetchCourses);
 
 // papers routes
 router.route('/papers').post(savePapers).get(fetchPapers);
+
+router.route('/papers/:paperId').put(updatePaperViews);
 
 router
   .route('/papers/:courseId/:exam_year/:subject_title')

@@ -88,3 +88,17 @@ export const fetchFilteredPapers = (
     }
   });
 };
+
+export const updatePaperViews = (paperId, file_link) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log(paperId, file_link);
+      const res = API.put(`/api/papers/${paperId}`, {
+        params: { file_link },
+      });
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
