@@ -105,6 +105,9 @@ const authSlice = createSlice({
       state.status = 'idle';
       state.user = action.payload.user;
     });
+    builder.addCase(fetchUserAsync.rejected, (state, action) => {
+      state.status = 'idle';
+    });
     builder.addCase(logoutUserAsync.pending, (state, action) => {
       state.status = 'loading';
     });

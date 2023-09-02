@@ -8,7 +8,10 @@ import Login from './features/auth/components/Login';
 import Signup from './features/auth/components/Signup';
 import VerifyOTP from './features/auth/components/VerifyOTP';
 import RegisterCreds from './features/auth/components/RegisterCreds';
-import ProtectOTPVerification from '../protectors/ProtectVerificatoionSession';
+import {
+  ProtectOTPVerification,
+  ProtectProfilePage,
+} from './protectors/ProtectVerificatoionSession';
 import ProfilePage from './pages/ProfilePage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -53,7 +56,11 @@ const router = createBrowserRouter([
   },
   {
     path: '/profile',
-    element: <ProfilePage />,
+    element: (
+      <ProtectProfilePage>
+        <ProfilePage />
+      </ProtectProfilePage>
+    ),
   },
 ]);
 

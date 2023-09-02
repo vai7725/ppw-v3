@@ -3,7 +3,7 @@ import logo from '../../../assets/logo.webp';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
-import { loginAsync } from '../authSlice';
+import { fetchUserAsync, loginAsync } from '../authSlice';
 
 export default function Login() {
   const {
@@ -39,6 +39,7 @@ export default function Login() {
                   success: 'some error occured',
                 })
                 .then(() => {
+                  dispatch(fetchUserAsync());
                   return navigate('/');
                 });
             })}
