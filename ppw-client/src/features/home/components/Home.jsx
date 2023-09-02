@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import landingImg from '../../../assets/landing-img.webp';
 import Main from './Main';
 import UniversitySection from './UniversitySection';

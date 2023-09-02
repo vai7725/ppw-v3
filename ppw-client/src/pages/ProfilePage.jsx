@@ -1,21 +1,19 @@
+import React from 'react';
 import Navbar from '../features/navbar/Navbar';
-import Home from '../features/home/components/Home';
+import Profile from '../features/profile/Profile';
 import { useSelector } from 'react-redux';
 import LoadingPage from './LoadingPage';
 
-import React from 'react';
-
-const HomePage = () => {
+const ProfilePage = () => {
   const { status } = useSelector((state) => state.auth);
   if (status === 'loading') {
     return <LoadingPage />;
   }
-
   return (
     <Navbar>
-      <Home />
+      <Profile />
     </Navbar>
   );
 };
 
-export default HomePage;
+export default ProfilePage;

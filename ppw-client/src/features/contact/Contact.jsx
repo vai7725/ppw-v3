@@ -51,12 +51,12 @@ export default function Contact() {
           toast.promise(dispatch(postContactQueryAsync(data)), {
             loading: 'Saving your query...',
             success: (
-              <h3 className="text-gray-800 text-lg font-semibold">
+              <h3 className="toast-msg">
                 Your query has been submitted successfully
               </h3>
             ),
             error: (
-              <h3 className="text-gray-800 text-lg text-red font-semibold">
+              <h3 className="toast-err">
                 Some error occured. Please try again later
               </h3>
             ),

@@ -5,3 +5,10 @@
 .hero-btn {
   @apply bg-gray-800 text-white w-full p-1 rounded-md  hover:bg-gray-700;
 }
+
+.toast-msg {
+  @apply text-gray-800 text-lg font-semibold;
+}
+.toast-err {
+  @apply text-red-800 text-lg font-semibold;
+}

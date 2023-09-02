@@ -4,13 +4,13 @@ import { EnvelopeIcon } from '@heroicons/react/24/outline';
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-800 flex flex-col items-start sm:flex-row sm:items-center justify-around sm:border-none w-full py-4 px-4 text-white ">
-      <header className="flex items-center max-w-[400px]  my-3 py-3 border-solid border-b-2 border-white sm:border-none">
+    <footer className="bg-gray-800 flex flex-col items-start sm:flex-row sm:items-center justify-around w-full py-4 px-4 text-white ">
+      <header className="flex items-center max-w-[400px]  my-3 py-3 ">
         <img className="h-8 w-auto" src={logo} alt="Your Company" />
         <h3 className="ml-3 font-semibold text-xl">Previous Papers</h3>
       </header>
       <div>
-        <div className="flex items-center py-3 max-w-[400px] border-solid border-b-2 border-white sm:border-none">
+        <div className="flex items-center py-3 max-w-[400px] ">
           <EnvelopeIcon className="h-6 w-6 " />
           <p className="ml-2">previouspapers2023@gmail.com</p>
         </div>
