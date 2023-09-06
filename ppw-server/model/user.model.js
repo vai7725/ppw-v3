@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import crypto from 'crypto';
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,20 +15,25 @@ const userSchema = new mongoose.Schema(
       required: [true, 'email is required'],
       unique: [true, 'email already registered'],
       match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+      lowercase: true,
     },
     username: {
       type: String,
       trim: true,
       unique: [true, 'username must be unique'],
+      lowercase: true,
+      required: true,
     },
     password: {
       type: String,
       trim: true,
       select: false,
+      required: true,
     },
     profession: {
       type: String,
       trim: true,
+      required: [true, 'Profession is required'],
     },
     university: {
       type: String,
@@ -42,12 +48,28 @@ const userSchema = new mongoose.Schema(
     role: {
       type: String,
       trim: true,
-      enum: ['ADMIN', 'USER'],
+      enum: ['ADMIN', 'USER', 'MANAGER'],
       default: 'USER',
+      required: true,
     },
-    profileCompleted: {
+    isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    refreshToken: {
+      type: String,
+    },
+    forgotPasswordToken: {
+      type: String,
+    },
+    forgotPasswordExpiry: {
+      type: Date,
+    },
+    emailVerificationToken: {
+      type: String,
+    },
+    emailVerificationExpiry: {
+      type: Date,
     },
   },
   {
@@ -55,31 +77,49 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre('findOneAndUpdate', async function (next) {
-  try {
-    if (!this._update || !this._update.password) {
-      return next();
-    }
-    const hashedPassword = await bcrypt.hash(this._update.password, 10);
-    this._update.password = hashedPassword;
-    next();
-  } catch (error) {
-    return next(error);
-  }
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
 });
 
 userSchema.methods = {
-  generateToken: function () {
+  generateAccessToken: function () {
     return jwt.sign(
       {
-        id: this._id,
+        _id: this._id,
         username: this.username,
+        email: this.email,
+        role: this.role,
       },
       process.env.JWT_SECRET,
       {
-        expiresIn: process.env.JWT_EXPIRY,
+        expiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRY,
       }
     );
+  },
+  generateRefreshToken: function () {
+    return jwt.sign(
+      {
+        _id: this._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRY,
+      }
+    );
+  },
+  generateTemporaryToken: function () {
+    const unHashedToken = crypto.randomBytes(20).toString('hex');
+    const hashedToken = crypto
+      .createHash('sha256')
+      .update(unHashedToken)
+      .digest('hex');
+    const tokenExpiry = Date.now() + 15 * 60 * 1000;
+    return { unHashedToken, hashedToken, tokenExpiry };
+  },
+  isPasswordCorrect: async function (password) {
+    return await bcrypt.compare(password, this.password);
   },
 };
 

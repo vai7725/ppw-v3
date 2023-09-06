@@ -2,10 +2,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.webp';
 import { Toaster, toast } from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
-import { useDispatch } from 'react-redux';
-import { registerUserEmailAsync, verifyOTPAsync } from '../authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect } from 'react';
+import { forgotPasswordAsync, updateForgotPasswordSession } from '../authSlice';
 
-export default function VerifyOTP() {
+export default function ForgotPassword() {
   const {
     register,
     handleSubmit,
@@ -25,50 +26,57 @@ export default function VerifyOTP() {
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img className="mx-auto h-14 w-auto" src={logo} alt="Your Company" />
           <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-            Verify OTP
+            Reset your password
           </h2>
-          <p className="text-center text-sm text-gray-600 font-semibold">
-            Check span folder if did not get otp
-          </p>
         </div>
 
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
-              toast
-                .promise(dispatch(verifyOTPAsync(data)), {
-                  loading: 'verifying otp...',
-                  success: (
-                    <h3 className="toast-msg">OTP verified successfully</h3>
-                  ),
-                  error: <h3 className="toast-err">Invalid OTP! Try again</h3>,
-                })
-                .then(() => {
-                  return navigate('/register-creds', { replace: true });
-                });
+              try {
+                toast
+                  .promise(dispatch(forgotPasswordAsync(data)), {
+                    loading: 'Sending reset link...',
+                    success: (
+                      <h3 className="toast-msg">Reset link has been sent</h3>
+                    ),
+                    error: <h3 className="toast-err">Some error occured</h3>,
+                  })
+                  .then((res) => {
+                    dispatch(updateForgotPasswordSession());
+                    navigate('/success');
+                  });
+              } catch (error) {
+                toast.error(error.message);
+              }
             })}
           >
             <div>
               <label
-                htmlFor="otp"
+                htmlFor="email"
                 className="block text-sm font-medium leading-6 text-gray-900"
               >
-                OTP
+                Email address
               </label>
               <div className="mt-2">
                 <input
-                  id="otp"
-                  {...register('otp', {
-                    required: true,
+                  id="email"
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: {
+                      value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                      message: 'Invalid email address',
+                    },
                   })}
-                  type="number"
-                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
-                    errors.otp ? 'ring-red-800' : ''
+                  type="text"
+                  className={`placeholder:text-sm block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.email ? 'ring-red-800' : ''
                   }`}
+                  placeholder="Enter your registered email"
                 />
-                {errors.otp && (
-                  <p className="text-sm text-red-800">{errors.otp.message}</p>
+                {errors.email && (
+                  <p className="text-sm text-red-800">{errors.email.message}</p>
                 )}
               </div>
             </div>
@@ -84,11 +92,8 @@ export default function VerifyOTP() {
           </form>
 
           <p className="mt-10 text-center text-sm text-gray-500">
-            Didn't get OTP?{' '}
-            <Link
-              to="/login"
-              className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500"
-            >
+            Did not get email?{' '}
+            <Link className="font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
               Send again
             </Link>
           </p>

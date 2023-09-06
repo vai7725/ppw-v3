@@ -6,16 +6,14 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import Login from './features/auth/components/Login';
 import Signup from './features/auth/components/Signup';
-import VerifyOTP from './features/auth/components/VerifyOTP';
-import RegisterCreds from './features/auth/components/RegisterCreds';
-import {
-  ProtectOTPVerification,
-  ProtectProfilePage,
-} from './protectors/ProtectVerificatoionSession';
+import { ProtectToLogin, ProtectLogin } from './protectors/ProtectRoutes';
 import ProfilePage from './pages/ProfilePage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchUserAsync } from './features/auth/authSlice';
+import SuccessPage from './features/auth/components/SuccessPage';
+import ForgotPassword from './features/auth/components/ForgotPassword';
+import ResetPassword from './features/auth/components/ResetPassword';
 
 const router = createBrowserRouter([
   {
@@ -36,40 +34,58 @@ const router = createBrowserRouter([
   },
   {
     path: '/login',
-    element: <Login />,
-  },
-  {
-    path: '/signup',
-    element: <Signup />,
-  },
-  {
-    path: '/verify-otp',
     element: (
-      <ProtectOTPVerification>
-        <VerifyOTP />
-      </ProtectOTPVerification>
+      <ProtectLogin>
+        <Login />
+      </ProtectLogin>
     ),
   },
   {
-    path: '/register-creds',
-    element: <RegisterCreds />,
+    path: '/forgot-password',
+    element: (
+      <ProtectLogin>
+        <ForgotPassword />
+      </ProtectLogin>
+    ),
   },
+  {
+    path: '/reset-password/:resetToken',
+    element: (
+      <ProtectLogin>
+        <ResetPassword />
+      </ProtectLogin>
+    ),
+  },
+  {
+    path: '/signup',
+    element: (
+      <ProtectLogin>
+        <Signup />
+      </ProtectLogin>
+    ),
+  },
+  {
+    path: '/success',
+    element: <SuccessPage />,
+  },
+
   {
     path: '/profile',
     element: (
-      <ProtectProfilePage>
+      <ProtectToLogin>
         <ProfilePage />
-      </ProtectProfilePage>
+      </ProtectToLogin>
     ),
   },
 ]);
 
 function App() {
   const dispatch = useDispatch();
+  const { isAuthenticated } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchUserAsync());
-  }, []);
+  }, [isAuthenticated]);
   return <RouterProvider router={router} />;
 }
 

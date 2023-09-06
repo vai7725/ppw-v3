@@ -110,7 +110,8 @@ export default function Navbar({ children }) {
 
                         <Menu.Item>
                           {({ active }) => (
-                            <button
+                            <Link
+                              to="/"
                               onClick={() => dispatch(logoutUserAsync())}
                               className={classNames(
                                 active ? 'bg-gray-100' : '',
@@ -118,7 +119,7 @@ export default function Navbar({ children }) {
                               )}
                             >
                               Log out
-                            </button>
+                            </Link>
                           )}
                         </Menu.Item>
                       </Menu.Items>

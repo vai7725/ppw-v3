@@ -1,49 +1,39 @@
-import mailer from 'nodemailer';
-import { otpMail } from '../templates/mailTemplates.js';
-import OTP from 'otp-generator';
+import nodemailer from 'nodemailer';
+import Mailgen from 'mailgen';
 
-export const mail = async (req, res) => {
+export const sendEmail = async (options) => {
+  const mailGenerator = new Mailgen({
+    theme: 'default',
+    product: {
+      name: `Previous Papers`,
+      link: `${process.env.CLIENT_URI}`,
+    },
+  });
+
+  const emailText = mailGenerator.generatePlaintext(options.mailContent);
+
+  const emailHtml = mailGenerator.generate(options.mailContent);
+
+  const transporter = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port: process.env.SMTP_PORT,
+    auth: {
+      user: process.env.SENDER_EMAIL,
+      pass: process.env.SENDER_EMAIL_PASSWORD,
+    },
+  });
+
+  const mail = {
+    from: process.env.CLIENT_URI,
+    to: options.email,
+    subject: options.subject,
+    text: emailText,
+    html: emailHtml,
+  };
+
   try {
-    const { email } = req.body;
-    req.app.locals.user = {
-      email,
-      otp: OTP.generate(6, {
-        lowerCaseAlphabets: false,
-        upperCaseAlphabets: false,
-        specialChars: false,
-      }),
-      otpExpiry: Date.now() + 300000,
-    };
-
-    const config = {
-      host: 'smtp.ethereal.email',
-      port: 587,
-      auth: {
-        user: process.env.SENDER_EMAIL,
-        pass: process.env.SENDER_EMAIL_PASSWORD,
-      },
-    };
-
-    const transporter = mailer.createTransport(config);
-
-    const mail = {
-      from: process.env.SENDER_EMAIL,
-      to: email,
-      subject: otpMail(req.app.locals.user.otp).subject,
-      html: otpMail(req.app.locals.user.otp).body,
-    };
-
-    const emailSent = await transporter.sendMail(mail);
-    if (!emailSent) {
-      return res
-        .status(500)
-        .json({ success: false, msg: 'Could not send email' });
-    }
-    console.log(req.app.locals.user);
-    return res
-      .status(200)
-      .json({ success: true, msg: 'Email sent successfully' });
+    await transporter.sendMail(mail);
   } catch (error) {
-    res.status(500).json({ success: false, msg: error.message });
+    console.log(error);
   }
 };

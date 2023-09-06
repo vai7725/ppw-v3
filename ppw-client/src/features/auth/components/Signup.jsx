@@ -4,8 +4,8 @@ import { Toaster, toast } from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  registerUserEmailAsync,
-  updateUserEmail,
+  loginAsync,
+  registerUserAsync,
   updateVerificationSession,
 } from '../authSlice';
 import { useEffect } from 'react';
@@ -44,19 +44,18 @@ export default function Signup() {
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
               try {
-                dispatch(updateUserEmail(data));
                 toast
-                  .promise(dispatch(registerUserEmailAsync(data)), {
-                    loading: 'loading...',
-                    success: <h3 className="toast-msg">👍</h3>,
+                  .promise(dispatch(registerUserAsync(data)), {
+                    loading: 'Saving info...',
+                    success: (
+                      <h3 className="toast-msg">Verification email sent</h3>
+                    ),
                     error: <h3 className="toast-err">Some error occured</h3>,
                   })
                   .then((res) => {
-                    if (res.payload.redirectToCreds) {
-                      navigate('/register-creds');
-                    } else {
-                      dispatch(updateVerificationSession(true));
-                      navigate('/verify-otp');
+                    if (res.payload.success) {
+                      dispatch(loginAsync());
+                      navigate('/success');
                     }
                   });
               } catch (error) {
@@ -64,6 +63,56 @@ export default function Signup() {
               }
             })}
           >
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Name
+              </label>
+              <div className="mt-2">
+                <input
+                  id="name"
+                  {...register('name', {
+                    required: 'Name is reaquired',
+                  })}
+                  type="text"
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.name ? 'ring-red-800' : ''
+                  }`}
+                />
+                {errors.name && (
+                  <p className="text-sm text-red-800">{errors.name.message}</p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="username"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Username
+              </label>
+              <div className="mt-2">
+                <input
+                  id="username"
+                  {...register('username', {
+                    required: 'Username is required',
+                  })}
+                  type="text"
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.username ? 'ring-red-800' : ''
+                  }`}
+                />
+                {errors.username && (
+                  <p className="text-sm text-red-800">
+                    {errors.username.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
             <div>
               <label
                 htmlFor="email"
@@ -75,7 +124,7 @@ export default function Signup() {
                 <input
                   id="email"
                   {...register('email', {
-                    required: true,
+                    required: 'Email is required',
                     pattern: {
                       value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
                       message: 'Invalid email address',
@@ -91,13 +140,120 @@ export default function Signup() {
                 )}
               </div>
             </div>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Password
+              </label>
+              <div className="mt-2">
+                <input
+                  id="password"
+                  {...register('password', {
+                    required: 'Password is required',
+                    minLength: {
+                      value: 6,
+                      message: 'Password must contain at least 6 characters',
+                    },
+                  })}
+                  type="text"
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.password ? 'ring-red-800' : ''
+                  }`}
+                />
+                {errors.password && (
+                  <p className="text-sm text-red-800">
+                    {errors.password.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="profession"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Profession
+              </label>
+              <div className="mt-2">
+                <input
+                  id="profession"
+                  {...register('profession', {
+                    required: 'Profession is required',
+                  })}
+                  type="text"
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.profession ? 'ring-red-800' : ''
+                  }`}
+                  placeholder="Teacher / Student ..."
+                />
+                {errors.profession && (
+                  <p className="text-sm text-red-800">
+                    {errors.profession.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="university"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Your university{' '}
+                <span className="text-gray-400">(optional)</span>
+              </label>
+              <div className="mt-2">
+                <input
+                  id="university"
+                  {...register('university')}
+                  type="text"
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.university ? 'ring-red-800' : ''
+                  }`}
+                />
+                {errors.university && (
+                  <p className="text-sm text-red-800">
+                    {errors.university.message}
+                  </p>
+                )}
+              </div>
+            </div>
+
+            <div>
+              <label
+                htmlFor="course"
+                className="block text-sm font-medium leading-6 text-gray-900"
+              >
+                Enrolled course{' '}
+                <span className="text-gray-400">(optional)</span>
+              </label>
+              <div className="mt-2">
+                <input
+                  id="course"
+                  {...register('course')}
+                  type="text"
+                  className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
+                    errors.course ? 'ring-red-800' : ''
+                  }`}
+                  placeholder="B.Sc / B.Ed ..."
+                />
+                {errors.course && (
+                  <p className="text-sm text-red-800">
+                    {errors.course.message}
+                  </p>
+                )}
+              </div>
+            </div>
 
             <div>
               <button
                 type="submit"
                 className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
               >
-                Next
+                Create account
               </button>
             </div>
           </form>

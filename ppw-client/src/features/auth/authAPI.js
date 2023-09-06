@@ -9,32 +9,11 @@ const API = axios.create({
   withCredentials: true,
 });
 
-export const registerUserEmail = (data) => {
+export const registerUser = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await API.post(`/auth/register-user-email`, data);
-      resolve(res);
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
+      const res = await API.post(`/auth/register`, data);
 
-export const verifyOTP = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const res = await API.post(`/auth/verify-otp`, data);
-      resolve(res);
-    } catch (error) {
-      reject(error);
-    }
-  });
-};
-
-export const registerRestCredentials = (data) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const res = await API.patch(`/auth/register-user-credentials`, data);
       resolve(res);
     } catch (error) {
       reject(error);
@@ -68,7 +47,28 @@ export const logoutUser = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await API.post(`/auth/logout`);
-      console.log(res);
+      resolve(res);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const forgotPassword = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await API.post(`/auth/forgot-password`, data);
+      resolve(res);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const resetPassword = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await API.post(`/auth/reset-password`, data);
       resolve(res);
     } catch (error) {
       reject(error);
