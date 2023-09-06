@@ -61,7 +61,7 @@ export const registerUser = async (req, res) => {
     subject: 'Verify your email',
     mailContent: mailTemplate(
       user?.name,
-      `http://localhost:3000/auth/verify-email/${unHashedToken}`
+      `${req.protocol}://${req.get('host')}/auth/verify-email/${unHashedToken}`
     ),
   });
   const createdUser = await User.findById(user._id).select(
@@ -215,7 +215,9 @@ export const forgotPasswordRequest = async (req, res) => {
     subject: 'Password reset request',
     mailContent: forgotPasswordMailTemplate(
       user.name,
-      `http://localhost:3000/auth/verify-reset-link/${unHashedToken}`
+      `${req.protocol}://${req.get(
+        'host'
+      )}/auth/verify-reset-link/${unHashedToken}`
     ),
   });
   return res.status(201).json({
@@ -306,7 +308,9 @@ export const resendEmailVerification = async (req, res) => {
       subject: 'Verify your email',
       mailContent: mailTemplate(
         user?.name,
-        `http://localhost:3000/auth/verify-email/${unHashedToken}`
+        `${req.protocol}://${req.get(
+          'host'
+        )}/auth/verify-email/${unHashedToken}`
       ),
     });
     return res
