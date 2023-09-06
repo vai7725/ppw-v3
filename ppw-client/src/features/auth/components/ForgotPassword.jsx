@@ -45,7 +45,7 @@ export default function ForgotPassword() {
                   })
                   .then((res) => {
                     dispatch(updateForgotPasswordSession());
-                    navigate('/success');
+                    navigate('/reset-password-success');
                   });
               } catch (error) {
                 toast.error(error.message);

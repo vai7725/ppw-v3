@@ -5,6 +5,7 @@ import {
   login,
   logoutUser,
   registerUser,
+  resendVerificationEmail,
   resetPassword,
 } from './authAPI';
 
@@ -56,6 +57,13 @@ export const resetPasswordAsync = createAsyncThunk(
   'auth/resetPassword',
   async (data) => {
     const res = await resetPassword(data);
+    return res.data;
+  }
+);
+export const resendVerificationEmailAsync = createAsyncThunk(
+  'auth/resendVerificationEmail',
+  async () => {
+    const res = await resendVerificationEmail();
     return res.data;
   }
 );
@@ -128,6 +136,12 @@ const authSlice = createSlice({
       state.status = 'loading';
     });
     builder.addCase(resetPasswordAsync.fulfilled, (state, action) => {
+      state.status = 'idle';
+    });
+    builder.addCase(resendVerificationEmailAsync.pending, (state, action) => {
+      state.status = 'loading';
+    });
+    builder.addCase(resendVerificationEmailAsync.fulfilled, (state, action) => {
       state.status = 'idle';
     });
   },

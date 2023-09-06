@@ -278,3 +278,41 @@ export const resetForgottenPassword = async (req, res) => {
     .cookie('refreshToken', refreshToken, cookieOptions)
     .json({ succcess: true, msg: 'Password has been reset successfully' });
 };
+
+export const resendEmailVerification = async (req, res) => {
+  const user = await User.findById(req.user?._id);
+  if (!user) {
+    return res
+      .status(404)
+      .json({ succcess: false, msg: 'User does not exists' });
+  }
+
+  if (user.isEmailVerified) {
+    return res
+      .status(409)
+      .json({ succcess: false, msg: 'Email already verified' });
+  }
+
+  const { unHashedToken, hashedToken, tokenExpiry } =
+    user.generateTemporaryToken();
+
+  user.emailVerificationToken = hashedToken;
+  user.emailVerificationExpiry = tokenExpiry;
+  await user.save({ validateBeforeSave: false });
+
+  try {
+    await sendEmail({
+      email: user?.email,
+      subject: 'Verify your email',
+      mailContent: mailTemplate(
+        user?.name,
+        `http://localhost:3000/auth/verify-email/${unHashedToken}`
+      ),
+    });
+    return res
+      .status(200)
+      .json({ succcess: true, msg: 'Email has been sent successfully' });
+  } catch (error) {
+    return res.status(500).json({ succcess: false, msg: error.message });
+  }
+};

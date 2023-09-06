@@ -11,9 +11,10 @@ import ProfilePage from './pages/ProfilePage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
 import { fetchUserAsync } from './features/auth/authSlice';
-import SuccessPage from './features/auth/components/SuccessPage';
+import EmailVerificationSuccess from './features/auth/components/EmailVerificationSuccess';
 import ForgotPassword from './features/auth/components/ForgotPassword';
 import ResetPassword from './features/auth/components/ResetPassword';
+import ResetPasswordSuccess from './features/auth/components/ResetPasswordSuccess';
 
 const router = createBrowserRouter([
   {
@@ -65,8 +66,12 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/success',
-    element: <SuccessPage />,
+    path: '/email-verification-success',
+    element: <EmailVerificationSuccess />,
+  },
+  {
+    path: '/reset-password-success',
+    element: <ResetPasswordSuccess />,
   },
 
   {

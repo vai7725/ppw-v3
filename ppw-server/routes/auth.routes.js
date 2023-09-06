@@ -5,6 +5,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
+  resendEmailVerification,
   resetForgottenPassword,
   verifyEmail,
   verifyForgotPasswordLink,
@@ -27,5 +28,9 @@ router.route('/forgot-password').post(forgotPasswordRequest);
 router.route('/verify-reset-link/:resetToken').get(verifyForgotPasswordLink);
 
 router.route('/reset-password').post(resetForgottenPassword);
+
+router
+  .route('/resend-verification-email')
+  .post(verifyJWT, resendEmailVerification);
 
 export default router;

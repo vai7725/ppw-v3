@@ -75,3 +75,14 @@ export const resetPassword = (data) => {
     }
   });
 };
+
+export const resendVerificationEmail = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await API.post(`/auth/reset-password`);
+      resolve(res);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};

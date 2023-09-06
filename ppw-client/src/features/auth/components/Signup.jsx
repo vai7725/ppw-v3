@@ -55,7 +55,7 @@ export default function Signup() {
                   .then((res) => {
                     if (res.payload.success) {
                       dispatch(loginAsync());
-                      navigate('/success');
+                      navigate('/email-verification-success');
                     }
                   });
               } catch (error) {
