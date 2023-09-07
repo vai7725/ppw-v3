@@ -135,16 +135,14 @@ export const loginUser = async (req, res) => {
   if (!user) {
     return res.status(404).json({
       succcess: false,
-      msg: `No user found with the username - ${username}`,
+      msg: `No user found with the username - '${username}'`,
     });
   }
 
   const isPasswordValid = await user.isPasswordCorrect(password);
 
   if (!isPasswordValid) {
-    return res
-      .status(401)
-      .json({ succcess: false, msg: 'Invalid user credentials' });
+    return res.status(401).json({ succcess: false, msg: 'Incorrect password' });
   }
 
   const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(
@@ -160,7 +158,7 @@ export const loginUser = async (req, res) => {
     .cookie('accessToken', accessToken, cookieOptions)
     .cookie('refreshToken', refreshToken, cookieOptions)
     .json({
-      success: false,
+      success: true,
       msg: 'User logged in successfully',
       user: loggedInUser,
     });

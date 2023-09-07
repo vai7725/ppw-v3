@@ -3,9 +3,12 @@ import logo from '../../../assets/logo.webp';
 import { Toaster, toast } from 'react-hot-toast';
 import { useForm } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
+
 import {
   loginAsync,
   registerUserAsync,
+  updatePasswordVisibility,
   updateVerificationSession,
 } from '../authSlice';
 import { useEffect } from 'react';
@@ -22,7 +25,9 @@ export default function Signup() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status, redirectToCreds, user } = useSelector((state) => state.auth);
+  const { status, redirectToCreds, user, showPassword } = useSelector(
+    (state) => state.auth
+  );
 
   useEffect(() => {
     dispatch(updateVerificationSession(false));
@@ -147,7 +152,7 @@ export default function Signup() {
               >
                 Password
               </label>
-              <div className="mt-2">
+              <div className="mt-2 relative">
                 <input
                   id="password"
                   {...register('password', {
@@ -157,11 +162,17 @@ export default function Signup() {
                       message: 'Password must contain at least 6 characters',
                     },
                   })}
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
                     errors.password ? 'ring-red-800' : ''
                   }`}
                 />
+                <div
+                  onClick={() => dispatch(updatePasswordVisibility())}
+                  className="w-6 h-6 absolute right-2 top-[20%] text-gray-600 cursor-pointer"
+                >
+                  {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+                </div>
                 {errors.password && (
                   <p className="text-sm text-red-800">
                     {errors.password.message}

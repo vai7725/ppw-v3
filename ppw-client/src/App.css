@@ -7,8 +7,8 @@
 }
 
 .toast-msg {
-  @apply text-gray-800 text-lg font-semibold;
+  @apply text-gray-800 text-sm font-semibold;
 }
 .toast-err {
-  @apply text-red-800 text-lg font-semibold;
+  @apply text-red-800 text-sm font-semibold;
 }

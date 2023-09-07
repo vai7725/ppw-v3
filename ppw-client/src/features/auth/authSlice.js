@@ -16,21 +16,29 @@ const initialState = {
   redirectToCreds: false,
   verificationSession: false,
   activeForgotPasswordSession: false,
+  errorMsg: '',
+  showPassword: false,
 };
 
 export const registerUserAsync = createAsyncThunk(
   'auth/registerUser',
   async (data) => {
     const res = await registerUser(data);
-    console.log(res);
     return res.data;
   }
 );
 
-export const loginAsync = createAsyncThunk('auth/login', async (data) => {
-  const res = await login(data);
-  return res.data;
-});
+export const loginAsync = createAsyncThunk(
+  'auth/login',
+  async (data, { rejectWithValue }) => {
+    try {
+      const res = await login(data);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error.response.data);
+    }
+  }
+);
 
 export const fetchUserAsync = createAsyncThunk(
   'auth/fetchUser',
@@ -84,6 +92,9 @@ const authSlice = createSlice({
     updateForgotPasswordSession: (state, action) => {
       state.activeForgotPasswordSession = action.payload;
     },
+    updatePasswordVisibility: (state, action) => {
+      state.showPassword = !state.showPassword;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(registerUserAsync.pending, (state) => {
@@ -101,6 +112,7 @@ const authSlice = createSlice({
     });
     builder.addCase(loginAsync.rejected, (state, action) => {
       state.status = 'idle';
+      state.errorMsg = action.payload.msg;
     });
     builder.addCase(fetchUserAsync.pending, (state) => {
       state.status = 'loading';
@@ -112,6 +124,8 @@ const authSlice = createSlice({
     });
     builder.addCase(fetchUserAsync.rejected, (state, action) => {
       state.status = 'idle';
+      state.user = null;
+      state.isAuthenticated = false;
     });
     builder.addCase(logoutUserAsync.pending, (state, action) => {
       state.status = 'loading';
@@ -152,6 +166,7 @@ export const {
   updateVerificationSession,
   updateAuthentication,
   updateForgotPasswordSession,
+  updatePasswordVisibility,
 } = authSlice.actions;
 
 export default authSlice.reducer;

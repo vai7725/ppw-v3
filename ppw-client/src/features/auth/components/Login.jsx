@@ -1,15 +1,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import logo from '../../../assets/logo.webp';
 import { useForm } from 'react-hook-form';
-import { toast } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchUserAsync,
   loginAsync,
-  updateAuthentication,
-  updateForgotPasswordSession,
+  updatePasswordVisibility,
 } from '../authSlice';
-import LoadingPage from '../../../pages/LoadingPage';
+import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 export default function Login() {
   const {
@@ -24,14 +23,16 @@ export default function Login() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const { status } = useSelector((state) => state.auth);
+  const { status, showPassword } = useSelector((state) => state.auth);
 
-  if (status === 'loading') {
-    return <LoadingPage />;
-  }
+  // if (status === 'loading') {
+  //   return <LoadingPage />;
+  // }
 
   return (
     <>
+      <Toaster position="top-center" reverseOrder="false" />
+
       <div className="flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-sm">
           <img className="mx-auto h-14 w-auto" src={logo} alt="Your Company" />
@@ -44,17 +45,17 @@ export default function Login() {
           <form
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
-              console.log(data);
-              toast
-                .promise(dispatch(loginAsync(data)), {
-                  loading: 'Verifying credentials...',
-                  success: 'Verfication successfull',
-                  error: 'Some error occured',
-                })
-                .then(() => {
+              dispatch(loginAsync(data)).then((res) => {
+                if (res?.payload?.success) {
+                  toast.success(
+                    <p className="toast-msg">{res?.payload?.msg}</p>
+                  );
                   dispatch(fetchUserAsync());
-                  return navigate('/');
-                });
+                  navigate('/');
+                } else {
+                  toast.error(<p className="toast-err">{res?.payload?.msg}</p>);
+                }
+              });
             })}
           >
             <div>
@@ -100,17 +101,23 @@ export default function Login() {
                   </Link>
                 </div>
               </div>
-              <div className="mt-2">
+              <div className="mt-2 relative">
                 <input
                   id="password"
                   {...register('password', {
                     required: 'Password is required',
                   })}
-                  type="text"
+                  type={showPassword ? 'text' : 'password'}
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
                     errors.password ? 'ring-red-800' : ''
                   }`}
                 />
+                <div
+                  onClick={() => dispatch(updatePasswordVisibility())}
+                  className="w-6 h-6 absolute right-2 top-[20%] text-gray-600 cursor-pointer"
+                >
+                  {showPassword ? <EyeIcon /> : <EyeSlashIcon />}
+                </div>
                 {errors.password && (
                   <p className="text-sm text-red-800">
                     {errors.password.message}
