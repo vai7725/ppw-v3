@@ -103,6 +103,12 @@ export const papersSlice = createSlice({
       state.subjectTitles = [];
       state.examYears = [];
     },
+    clearCourses: (state) => {
+      state.courses = [];
+    },
+    clearUniversity: (state) => {
+      state.university = {};
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -170,6 +176,12 @@ export const papersSlice = createSlice({
   },
 });
 
-export const { updateFilters, clearPapers, clearFilters } = papersSlice.actions;
+export const {
+  updateFilters,
+  clearPapers,
+  clearFilters,
+  clearCourses,
+  clearUniversity,
+} = papersSlice.actions;
 
 export default papersSlice.reducer;

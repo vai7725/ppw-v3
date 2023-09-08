@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  editUniversity,
   fetchCourses,
   fetchExamYears,
   fetchFilteredPapers,
@@ -12,13 +13,20 @@ import {
   saveUniversity,
   updatePaperViews,
 } from '../controllers/papers.controller.js';
+import { verifyPermission, verifyJWT } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 // university routes
-router.route('/universities').post(saveUniversity).get(fetchUniversities);
+router
+  .route('/universities')
+  .get(fetchUniversities)
+  .post(verifyJWT, verifyPermission(['ADMIN', 'MANAGER']), saveUniversity);
 
-router.route('/universities/:universityId').get(fetchUniversity);
+router
+  .route('/university/:universityId')
+  .get(fetchUniversity)
+  .put(verifyJWT, verifyPermission(['ADMIN']), editUniversity);
 
 // courses routes
 router.route('/courses').post(saveCourse).get(fetchCourses);

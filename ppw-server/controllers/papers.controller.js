@@ -28,9 +28,35 @@ export const saveUniversity = async (req, res) => {
   }
 };
 
+export const editUniversity = async (req, res) => {
+  const { universityId } = req.params;
+  try {
+    const university = await University.findById(universityId);
+    if (!university) {
+      return res.status(404).json({
+        success: false,
+        msg: `University does not exists with id - ${universityId}`,
+      });
+    }
+
+    await University.findByIdAndUpdate(
+      universityId,
+      {
+        ...req.body,
+      },
+      { new: true }
+    );
+    return res
+      .status(200)
+      .json({ success: true, msg: 'University data modified successfully' });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
 export const fetchUniversities = async (req, res) => {
   try {
-    const universities = await University.find();
+    const universities = await University.find({ deleted: { $ne: true } });
     if (!universities) {
       return res.status(404).json({
         success: false,

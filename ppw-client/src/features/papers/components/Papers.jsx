@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import paperCover from '../../../assets/paper-cover.jpeg';
 import { useEffect } from 'react';
 import {
+  clearPapers,
+  clearUniversity,
   fetchPapersAsync,
   fetchUniversityAsync,
   updatePaperViewsAsync,
@@ -25,10 +27,16 @@ export default function Papers({ universityId }) {
 
   useEffect(() => {
     dispatch(fetchUniversityAsync(universityId));
-  }, [universityId, dispatch]);
+    return () => {
+      dispatch(clearUniversity());
+    };
+  }, [universityId]);
 
   useEffect(() => {
     dispatch(fetchPapersAsync({ universityId, page }));
+    return () => {
+      dispatch(clearPapers());
+    };
   }, []);
 
   const examYears = examYearObj();

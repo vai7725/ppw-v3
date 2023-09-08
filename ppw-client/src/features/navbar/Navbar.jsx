@@ -7,9 +7,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUserAsync } from '../auth/authSlice';
 
 const navigation = [
-  { name: 'Home', href: '/', current: true },
+  { name: 'Home', href: '/', current: false },
   { name: 'About', href: '/about', current: false },
   { name: 'Contact', href: '/contact', current: false },
+];
+
+const securedNavigation = [
+  { name: 'Dashboard', href: '/dashboard', current: false },
 ];
 
 function classNames(...classes) {
@@ -61,6 +65,24 @@ export default function Navbar({ children }) {
                           {item.name}
                         </Link>
                       ))}
+                      {(user?.role == 'ADMIN' || user?.role == 'MANAGER') &&
+                        securedNavigation.map((item) => {
+                          return (
+                            <Link
+                              key={item.name}
+                              to={item.href}
+                              className={classNames(
+                                location.pathname === item.href
+                                  ? 'bg-gray-900 text-white'
+                                  : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                                'rounded-md px-3 py-2 text-sm font-medium'
+                              )}
+                              aria-current={item.current ? 'page' : undefined}
+                            >
+                              {item.name}
+                            </Link>
+                          );
+                        })}
                     </div>
                   </div>
                 </div>
@@ -147,12 +169,31 @@ export default function Navbar({ children }) {
                     {item.name}
                   </Link>
                 ))}
+                {(user?.role === 'ADMIN' || user?.role === 'MANAGER') &&
+                  securedNavigation.map((item) => {
+                    return (
+                      <Link
+                        key={item.name}
+                        as="a"
+                        to={item.href}
+                        className={classNames(
+                          location.pathname === item.href
+                            ? 'bg-gray-900 text-white'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          'block rounded-md px-3 py-2 text-base font-medium'
+                        )}
+                        aria-current={item.current ? 'page' : undefined}
+                      >
+                        {item.name}
+                      </Link>
+                    );
+                  })}
               </div>
             </Disclosure.Panel>
           </>
         )}
       </Disclosure>
-      <main className="mx-auto w-full   ">{children}</main>
+      <main className="mx-auto w-full">{children}</main>
     </>
   );
 }

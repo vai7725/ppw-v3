@@ -17,6 +17,10 @@ const universitySchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    deleted: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

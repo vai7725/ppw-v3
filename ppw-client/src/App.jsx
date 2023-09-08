@@ -6,7 +6,11 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import Login from './features/auth/components/Login';
 import Signup from './features/auth/components/Signup';
-import { ProtectToLogin, ProtectLogin } from './protectors/ProtectRoutes';
+import {
+  ProtectToLogin,
+  ProtectLogin,
+  AuthorizeAccess,
+} from './protectors/ProtectRoutes';
 import ProfilePage from './pages/ProfilePage';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
@@ -15,6 +19,9 @@ import EmailVerificationSuccess from './features/auth/components/EmailVerificati
 import ForgotPassword from './features/auth/components/ForgotPassword';
 import ResetPassword from './features/auth/components/ResetPassword';
 import ResetPasswordSuccess from './features/auth/components/ResetPasswordSuccess';
+import AddUniversity from './features/home/components/AddUniversity';
+import AddUniversityPage from './pages/AddUniversityPage';
+import EditUniversityPage from './pages/EditUniversityPage';
 
 const router = createBrowserRouter([
   {
@@ -80,6 +87,22 @@ const router = createBrowserRouter([
       <ProtectToLogin>
         <ProfilePage />
       </ProtectToLogin>
+    ),
+  },
+  {
+    path: '/add-university',
+    element: (
+      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+        <AddUniversityPage />
+      </AuthorizeAccess>
+    ),
+  },
+  {
+    path: '/edit-university/:universityId',
+    element: (
+      <AuthorizeAccess role={['ADMIN']}>
+        <EditUniversityPage />
+      </AuthorizeAccess>
     ),
   },
 ]);

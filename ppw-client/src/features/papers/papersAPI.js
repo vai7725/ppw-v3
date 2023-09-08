@@ -10,7 +10,7 @@ const API = axios.create({
 export const fetchUniversity = (universityId) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = API.get(`/api/universities/${universityId}`);
+      const res = API.get(`/api/university/${universityId}`);
       return resolve(res);
     } catch (error) {
       return reject(error);

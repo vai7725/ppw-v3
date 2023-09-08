@@ -17,6 +17,7 @@ import {
   updateFilters,
   clearPapers,
   clearFilters,
+  clearCourses,
 } from '../papersSlice';
 import { useParams } from 'react-router-dom';
 import useCourseDuration from '../../../utils/useCourseDuration';
@@ -49,6 +50,9 @@ export default function PapersSection() {
 
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
+    return () => {
+      dispatch(clearCourses());
+    };
   }, []);
 
   const courseOptions = courses.map((course) => {

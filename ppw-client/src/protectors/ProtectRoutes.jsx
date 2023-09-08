@@ -28,3 +28,11 @@ export const ProtectToLogin = ({ children }) => {
   }
   return children;
 };
+
+export const AuthorizeAccess = ({ role = [], children }) => {
+  const { user } = useSelector((state) => state.auth);
+  if (user && role.includes(user?.role)) {
+    return children;
+  }
+  return <Navigate to="/" replace={true} />;
+};
