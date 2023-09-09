@@ -29,10 +29,16 @@ router
   .put(verifyJWT, verifyPermission(['ADMIN']), editUniversity);
 
 // courses routes
-router.route('/courses').post(saveCourse).get(fetchCourses);
+router
+  .route('/courses')
+  .get(fetchCourses)
+  .post(verifyJWT, verifyPermission(['ADMIN', 'MANAGER']), saveCourse);
 
 // papers routes
-router.route('/papers').post(savePapers).get(fetchPapers);
+router
+  .route('/papers')
+  .post(verifyJWT, verifyPermission(['ADMIN', 'MANAGER']), savePapers)
+  .get(fetchPapers);
 
 router.route('/papers/:paperId').put(updatePaperViews);
 

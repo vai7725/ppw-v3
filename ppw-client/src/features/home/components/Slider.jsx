@@ -5,6 +5,8 @@ import {
   ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
+  PlusCircleIcon,
+  DocumentPlusIcon,
 } from '@heroicons/react/24/outline';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchUniversitiesAsync, modifyUniversityAsync } from '../homeSlice';
@@ -78,11 +80,29 @@ const Slider = () => {
                 >
                   Select
                 </Link>
+                {user && (user.role === 'ADMIN' || user.role === 'MANAGER') && (
+                  <div className="flex items-center justify-between w-full">
+                    <Link
+                      to={`/add-course/${university._id}`}
+                      className=" flex items-center justify-center text-center my-1 bg-green-700 text-white w-full mx-1 py-1 rounded-md hover:bg-green-600"
+                    >
+                      <PlusCircleIcon className="w-6 h-6 mr-1" />
+                      Add courses
+                    </Link>
+                    <Link
+                      to={`/add-paper/${university._id}`}
+                      className="flex items-center justify-center text-center my-1  bg-blue-700 text-white w-full mx-1 py-1 rounded-md hover:bg-blue-600"
+                    >
+                      <DocumentPlusIcon className="w-6 h-6 mr-1" />
+                      Add paper
+                    </Link>
+                  </div>
+                )}
                 {user && user.role === 'ADMIN' && (
                   <div className="flex items-center justify-between w-full">
                     <Link
                       to={`/edit-university/${university._id}`}
-                      className=" flex items-center justify-center text-center my-1 bg-indigo-700 text-white w-full mx-1 py-1 rounded-md hover:bg-indigo-600"
+                      className=" flex items-center justify-center text-center my-1 bg-sky-700 text-white w-full mx-1 py-1 rounded-md hover:bg-sky-600"
                     >
                       <PencilSquareIcon className="w-6 h-6 mr-1" />
                       Edit

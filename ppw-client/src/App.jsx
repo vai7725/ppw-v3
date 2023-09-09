@@ -22,6 +22,8 @@ import ResetPasswordSuccess from './features/auth/components/ResetPasswordSucces
 import AddUniversity from './features/home/components/AddUniversity';
 import AddUniversityPage from './pages/AddUniversityPage';
 import EditUniversityPage from './pages/EditUniversityPage';
+import AddPaperPage from './pages/AddPaperPage';
+import AddCoursePage from './pages/AddCoursePage';
 
 const router = createBrowserRouter([
   {
@@ -102,6 +104,22 @@ const router = createBrowserRouter([
     element: (
       <AuthorizeAccess role={['ADMIN']}>
         <EditUniversityPage />
+      </AuthorizeAccess>
+    ),
+  },
+  {
+    path: '/add-paper/:universityId',
+    element: (
+      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+        <AddPaperPage />
+      </AuthorizeAccess>
+    ),
+  },
+  {
+    path: '/add-course/:universityId',
+    element: (
+      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+        <AddCoursePage />
       </AuthorizeAccess>
     ),
   },

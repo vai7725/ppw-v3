@@ -1,6 +1,10 @@
 import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+import {
+  XMarkIcon,
+  PlusCircleIcon,
+  PlusIcon,
+} from '@heroicons/react/24/outline';
 import {
   MagnifyingGlassIcon,
   ChevronUpIcon,
@@ -19,9 +23,10 @@ import {
   clearFilters,
   clearCourses,
 } from '../papersSlice';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import useCourseDuration from '../../../utils/useCourseDuration';
 import { Controller, useForm } from 'react-hook-form';
+import { courseOptionsMaker, subjectOptionsMaker } from '../../../utils/helper';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -47,6 +52,7 @@ export default function PapersSection() {
     page,
   } = useSelector((state) => state.papers);
   const { universityId } = useParams();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
@@ -55,13 +61,15 @@ export default function PapersSection() {
     };
   }, []);
 
-  const courseOptions = courses.map((course) => {
-    return {
-      value: course._id,
-      label: course.title,
-      checked: false,
-    };
-  });
+  // const courseOptions = courses.map((course) => {
+  //   return {
+  //     value: course._id,
+  //     label: course.title,
+  //     checked: false,
+  //   };
+  // });
+
+  const courseOptions = courseOptionsMaker(courses);
 
   const [durationYearsOptions] = useCourseDuration(examYears);
 
@@ -78,13 +86,14 @@ export default function PapersSection() {
   const subjectTitleFilters = {
     id: 'subject_title',
     name: 'Subjects',
-    options: subjectTitles.map((title) => {
-      return {
-        value: title,
-        label: title,
-        checked: false,
-      };
-    }),
+    // options: subjectTitles.map((title) => {
+    //   return {
+    //     value: title,
+    //     label: title,
+    //     checked: false,
+    //   };
+    // }),
+    options: subjectOptionsMaker(subjectTitles),
   };
 
   const handlefilters = (key, value) => {
@@ -397,9 +406,31 @@ export default function PapersSection() {
 
         <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-10">
-            <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-              Papers
-            </h1>
+            <div className="flex justify-between items-center w-full">
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900">
+                Papers
+              </h1>
+              <div className="flex items-center">
+                {user &&
+                  (user?.role === 'ADMIN' || user?.role === 'MANAGER') && (
+                    <Link
+                      to={`/add-paper/${universityId}`}
+                      title="Add paper"
+                      className="h-11 w-11 sm:h-12 sm:w-12 px-2 hover:bg-indigo-100 rounded-md flex"
+                    >
+                      <PlusCircleIcon />
+                    </Link>
+                  )}
+                <button
+                  type="button"
+                  className=" text-gray-700 hover:text-gray-500 lg:hidden h-11 sm:w-12 w-11 sm:h-12 flex p-2"
+                  onClick={() => setMobileFiltersOpen(true)}
+                >
+                  <span className="sr-only">Filters</span>
+                  <MagnifyingGlassIcon className="w-full" />
+                </button>
+              </div>
+            </div>
 
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
@@ -417,23 +448,10 @@ export default function PapersSection() {
                   </Menu.Items>
                 </Transition>
               </Menu>
-
-              <button
-                type="button"
-                className="-m-2 ml-4 p-2 text-gray-700 hover:text-gray-500 sm:ml-6 lg:hidden"
-                onClick={() => setMobileFiltersOpen(true)}
-              >
-                <span className="sr-only">Filters</span>
-                <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
             </div>
           </div>
 
           <section aria-labelledby="products-heading" className="pb-24 pt-6">
-            <h2 id="products-heading" className="sr-only">
-              Products
-            </h2>
-
             <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
               {/* Filters */}
               <form className="hidden lg:block">

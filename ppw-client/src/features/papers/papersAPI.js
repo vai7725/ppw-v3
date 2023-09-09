@@ -5,6 +5,7 @@ const API = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 export const fetchUniversity = (universityId) => {
@@ -92,10 +93,31 @@ export const fetchFilteredPapers = (
 export const updatePaperViews = (paperId, file_link) => {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log(paperId, file_link);
       const res = API.put(`/api/papers/${paperId}`, {
         params: { file_link },
       });
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const savePaper = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.post(`/api/papers`, data);
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const saveCourse = (data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.post(`/api/courses`, data);
       return resolve(res);
     } catch (error) {
       return reject(error);

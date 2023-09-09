@@ -6,6 +6,8 @@ import {
   fetchPapers,
   fetchSubjectTitles,
   fetchUniversity,
+  saveCourse,
+  savePaper,
   updatePaperViews,
 } from './papersAPI';
 
@@ -85,6 +87,30 @@ export const updatePaperViewsAsync = createAsyncThunk(
   async ({ paperId, file_link }) => {
     const res = await updatePaperViews(paperId, file_link);
     return res.data;
+  }
+);
+
+export const savePaperAsync = createAsyncThunk(
+  'papers/savePaper',
+  async (data) => {
+    try {
+      const res = await savePaper(data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
+export const saveCourseAsync = createAsyncThunk(
+  'papers/saveCourse',
+  async (data) => {
+    try {
+      const res = await saveCourse(data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
   }
 );
 
@@ -172,6 +198,15 @@ export const papersSlice = createSlice({
         state.papers = action.payload.papers;
         state.page = 1;
         state.papersFiltered = action.payload.papersFiltered;
+      })
+      .addCase(savePaperAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(savePaperAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+      })
+      .addCase(savePaperAsync.rejected, (state, action) => {
+        state.status = 'idle';
       });
   },
 });
