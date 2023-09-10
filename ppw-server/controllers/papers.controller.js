@@ -77,12 +77,13 @@ export const fetchUniversity = async (req, res) => {
   const { universityId } = req.params;
   try {
     const university = await University.findById({ _id: universityId });
+    const papersCount = await Paper.count({ universityId });
     if (!university) {
       return res
         .status(404)
         .json({ success: false, msg: 'University not found' });
     }
-    return res.status(200).json({ success: true, university });
+    return res.status(200).json({ success: true, university, papersCount });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }

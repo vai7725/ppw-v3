@@ -143,7 +143,10 @@ export const papersSlice = createSlice({
       })
       .addCase(fetchUniversityAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.university = action.payload.university;
+        state.university = {
+          ...action.payload.university,
+          papersCount: action.payload.papersCount,
+        };
       })
       .addCase(fetchCoursesAsync.pending, (state) => {
         state.status = 'loading';

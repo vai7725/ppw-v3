@@ -24,6 +24,7 @@ import AddUniversityPage from './pages/AddUniversityPage';
 import EditUniversityPage from './pages/EditUniversityPage';
 import AddPaperPage from './pages/AddPaperPage';
 import AddCoursePage from './pages/AddCoursePage';
+import DetailsPage from './pages/DetailsPage';
 
 const router = createBrowserRouter([
   {
@@ -120,6 +121,14 @@ const router = createBrowserRouter([
     element: (
       <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
         <AddCoursePage />
+      </AuthorizeAccess>
+    ),
+  },
+  {
+    path: '/details/:universityId',
+    element: (
+      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+        <DetailsPage />
       </AuthorizeAccess>
     ),
   },

@@ -75,7 +75,7 @@ const Slider = () => {
                       {university?.showOptions && (
                         <div className=" absolute right-8 bottom-12 flex flex-col  rounded-sm shadow-md bg-gray-800 ">
                           <Link
-                            to={`/add-course/${university._id}`}
+                            to={`/details/${university._id}`}
                             className=" flex items-center justify-start text-white pl-2 pr-4 text-sm hover:bg-gray-600 w-full  py-1 my-1 "
                           >
                             <ExclamationCircleIcon className="w-5 h-5 mr-1" />
