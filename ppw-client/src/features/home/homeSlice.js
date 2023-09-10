@@ -37,14 +37,29 @@ export const modifyUniversityAsync = createAsyncThunk(
 export const homeSlice = createSlice({
   name: 'home',
   initialState,
-  reducers: {},
+  reducers: {
+    toggleUniversityOptions: (state, action) => {
+      state.universities = state.universities.map((university) => {
+        if (university._id === action.payload) {
+          return {
+            ...university,
+            showOptions: !university.showOptions,
+          };
+        }
+        return university;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchUniversitiesAsync.pending, (state) => {
       state.status = 'loading';
     });
     builder.addCase(fetchUniversitiesAsync.fulfilled, (state, action) => {
       state.status = 'idle';
-      state.universities = action.payload.universities;
+      state.universities = action.payload.universities.map((university) => ({
+        ...university,
+        showOptions: false,
+      }));
     });
     builder.addCase(saveUniversityAsync.pending, (state) => {
       state.status = 'loading';
@@ -66,5 +81,7 @@ export const homeSlice = createSlice({
     });
   },
 });
+
+export const { toggleUniversityOptions } = homeSlice.actions;
 
 export default homeSlice.reducer;
