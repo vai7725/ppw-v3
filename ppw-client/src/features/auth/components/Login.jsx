@@ -25,10 +25,6 @@ export default function Login() {
 
   const { status, showPassword } = useSelector((state) => state.auth);
 
-  // if (status === 'loading') {
-  //   return <LoadingPage />;
-  // }
-
   return (
     <>
       <Toaster position="top-center" reverseOrder="false" />

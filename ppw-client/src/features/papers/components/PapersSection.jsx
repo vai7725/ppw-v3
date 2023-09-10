@@ -410,26 +410,6 @@ export default function PapersSection() {
               <h1 className="text-3xl font-bold tracking-tight text-gray-900">
                 Papers
               </h1>
-              <div className="flex items-center">
-                {user &&
-                  (user?.role === 'ADMIN' || user?.role === 'MANAGER') && (
-                    <Link
-                      to={`/add-paper/${universityId}`}
-                      title="Add paper"
-                      className="h-11 w-11 sm:h-12 sm:w-12 px-2 hover:bg-indigo-100 rounded-md flex"
-                    >
-                      <PlusCircleIcon />
-                    </Link>
-                  )}
-                <button
-                  type="button"
-                  className=" text-gray-700 hover:text-gray-500 lg:hidden h-11 sm:w-12 w-11 sm:h-12 flex p-2"
-                  onClick={() => setMobileFiltersOpen(true)}
-                >
-                  <span className="sr-only">Filters</span>
-                  <MagnifyingGlassIcon className="w-full" />
-                </button>
-              </div>
             </div>
 
             <div className="flex items-center">
@@ -448,6 +428,14 @@ export default function PapersSection() {
                   </Menu.Items>
                 </Transition>
               </Menu>
+              <button
+                type="button"
+                className=" text-gray-700 hover:text-gray-500 lg:hidden sm:w-12 "
+                onClick={() => setMobileFiltersOpen(true)}
+              >
+                <span className="sr-only">Filters</span>
+                <MagnifyingGlassIcon className="h-6 w-6" />
+              </button>
             </div>
           </div>
 

@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearCourses,
@@ -13,12 +13,13 @@ import {
 import { useParams } from 'react-router-dom';
 import {
   courseOptionsMaker,
-  examYearObj,
+  maxYearProvider,
   subjectOptionsMaker,
 } from '../../../utils/helper';
 import { useForm } from 'react-hook-form';
-import useCourseDuration from '../../../utils/useCourseDuration';
 import toast, { Toaster } from 'react-hot-toast';
+import { search } from '../../../utils/search';
+import { XMarkIcon, XCircleIcon } from '@heroicons/react/24/outline';
 
 export default function AddPaper() {
   const {
@@ -34,6 +35,11 @@ export default function AddPaper() {
   const { courses, examYears, selectedFilters, subjectTitles, university } =
     useSelector((state) => state.papers);
 
+  const [maxYearValue, setMaxYearValue] = useState(0);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchResults, setSearchResults] = useState([]);
+  const [inpValue, setInpValue] = useState('');
+
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
     dispatch(fetchUniversityAsync(universityId));
@@ -44,12 +50,19 @@ export default function AddPaper() {
   }, [universityId]);
 
   const courseOptions = courseOptionsMaker(courses);
-  const [durationYearsOptions] = useCourseDuration(examYears);
-  const subjectOptions = subjectOptionsMaker(subjectTitles);
 
   const handlefilters = (key, value) => {
     dispatch(updateFilters({ [key]: value }));
   };
+
+  const handleSearch = () => {
+    const results = search(subjectTitles, inpValue);
+    setSearchResults(results);
+  };
+
+  useEffect(() => {
+    handleSearch();
+  }, [inpValue]);
 
   return (
     <>
@@ -72,6 +85,7 @@ export default function AddPaper() {
           <form
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
+              console.log(data);
               dispatch(savePaperAsync({ ...data, universityId })).then(
                 (res) => {
                   if (res?.payload?.success) {
@@ -94,10 +108,10 @@ export default function AddPaper() {
               <div className="mt-2">
                 <select
                   id="course"
-                  {...register('course', { required: 'Course is required' })}
-                  required
+                  {...register('courseId', { required: 'Course is required' })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => {
+                    setMaxYearValue(maxYearProvider(courses, e.target.value));
                     handlefilters('courseId', e.target.value),
                       dispatch(
                         fetchExamYearsAsync({
@@ -116,6 +130,11 @@ export default function AddPaper() {
                     );
                   })}
                 </select>
+                {errors.course && (
+                  <p className="text-sm text-red-800">
+                    {errors.course.message}
+                  </p>
+                )}
               </div>
             </div>
 
@@ -127,10 +146,16 @@ export default function AddPaper() {
                 Course year
               </label>
               <div className="mt-2">
-                <select
+                <input
                   id="exam_year"
-                  {...register('exam_year')}
-                  required
+                  type="number"
+                  {...register('exam_year', {
+                    required: 'Course year is required',
+                    max: {
+                      value: maxYearValue,
+                      message: `Value cannot be grater than ${maxYearValue}`,
+                    },
+                  })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   onChange={(e) => {
                     handlefilters('exam_year', e.target.value),
@@ -142,14 +167,12 @@ export default function AddPaper() {
                         })
                       );
                   }}
-                >
-                  <option value="">--Select course year--</option>
-                  {durationYearsOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                />
+                {
+                  <p className="text-sm text-red-800">
+                    {errors.exam_year?.message || ''}
+                  </p>
+                }
               </div>
             </div>
 
@@ -160,20 +183,49 @@ export default function AddPaper() {
               >
                 Subject title
               </label>
-              <div className="mt-2">
-                <select
+              <div className="mt-2 relative">
+                <input
                   id="subject_title"
-                  {...register('subject_title')}
-                  required
+                  type="text"
+                  {...register('subject_title', {
+                    required: 'Subject title is required',
+                  })}
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                >
-                  <option value="">--Select subject--</option>
-                  {subjectOptions.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
+                  value={inpValue}
+                  onChange={(e) => {
+                    setInpValue(e.target.value);
+                    setShowSuggestions(true);
+                  }}
+                />
+                {errors.subject_title && (
+                  <p className="text-sm text-red-800">
+                    {errors.subject_title.message}
+                  </p>
+                )}
+
+                {showSuggestions && (
+                  <ul className="bg-gray-100 rounded-md relative mt-2 pt-2 w-full  shadow-md">
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault(), setShowSuggestions(false);
+                      }}
+                      className=" text-red-700 absolute right-0 top-0 rounded-tr-md rounded-bl-md bg-red-100"
+                    >
+                      <XCircleIcon className="h-6 w-6" />
+                    </button>
+                    {searchResults?.map((result) => (
+                      <li
+                        key={result}
+                        className="px-3 py-1  my-1 hover:bg-indigo-100 rounded-sm cursor-default"
+                        onClick={() => (
+                          setInpValue(result), setShowSuggestions(false)
+                        )}
+                      >
+                        {result}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </div>
 
@@ -187,12 +239,19 @@ export default function AddPaper() {
               <div className="mt-2">
                 <input
                   id="paper_year"
-                  {...register('paper_year')}
+                  {...register('paper_year', {
+                    required: 'Paper year is required',
+                  })}
                   type="number"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                  placeholder="2023 / 2024 ..."
                 />
               </div>
+              {errors.paper_year && (
+                <p className="text-sm text-red-800">
+                  {errors.paper_year.message}
+                </p>
+              )}
             </div>
 
             <div>
@@ -214,10 +273,14 @@ export default function AddPaper() {
                     },
                   })}
                   type="text"
-                  required
                   className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                 />
               </div>
+              {errors.file_link && (
+                <p className="text-sm text-red-800">
+                  {errors.file_link.message}
+                </p>
+              )}
             </div>
 
             <div>

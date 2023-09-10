@@ -1,4 +1,4 @@
-export const search = (titlesArr, searchInput) => {
+export const search = (titlesArr = [], searchInput = '') => {
   function createTrieNode() {
     return {
       children: {},

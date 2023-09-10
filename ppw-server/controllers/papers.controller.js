@@ -130,13 +130,15 @@ export const fetchCourses = async (req, res) => {
 
 // papers controllers
 export const savePapers = async (req, res) => {
-  const { subject_title, exam_year, paper_year, file_link } = req.body;
+  const { universityId, courseId, subject_title, exam_year, paper_year } =
+    req.body;
   try {
     const paperExists = await Paper.findOne({
       subject_title,
       exam_year,
       paper_year,
-      file_link,
+      universityId,
+      courseId,
     });
     if (paperExists) {
       return res
@@ -148,7 +150,7 @@ export const savePapers = async (req, res) => {
     if (!paper) {
       return res
         .status(500)
-        .json({ success: false, msg: 'Could not save paper' });
+        .json({ success: false, msg: 'Could not create paper' });
     }
     await paper.save();
 

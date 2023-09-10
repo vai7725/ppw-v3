@@ -27,3 +27,23 @@ export const subjectOptionsMaker = (subjectTitles) => {
     checked: false,
   }));
 };
+
+export const maxFinder = (nums) => {
+  let max = 0;
+  for (let i = 0; i < nums.length; i++) {
+    if (nums[i] > max) {
+      max = nums[i];
+    }
+  }
+  return +max;
+};
+
+export const maxYearProvider = (courses, selectedCourse) => {
+  let result;
+  courses.forEach((course) => {
+    if (course._id === selectedCourse) {
+      result = +course.duration_years;
+    }
+  });
+  return result;
+};
