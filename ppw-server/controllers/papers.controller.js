@@ -106,7 +106,7 @@ export const saveCourse = async (req, res) => {
         .status(500)
         .json({ success: false, msg: 'Could not save course' });
     }
-    course.save();
+    await course.save();
     return res
       .status(200)
       .json({ success: true, msg: 'Course saved successfully.' });
@@ -124,6 +124,50 @@ export const fetchCourses = async (req, res) => {
       return res.status(404).json({ success: false, msg: 'No courses found' });
     }
     return res.status(200).json({ success: true, courses });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const fetchCourse = async (req, res) => {
+  const { courseId } = req.params;
+  if (!courseId) {
+    return res.status(400).json({ success: false, msg: 'Invalid request' });
+  }
+  try {
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        msg: `Could not find the course - ${courseId}`,
+      });
+    }
+    return res
+      .status(200)
+      .json({ success: true, msg: 'Course fetched successfully', course });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const editCourse = async (req, res) => {
+  const { courseId } = req.params;
+  console.log(req.body);
+  if (!courseId) {
+    return res.status(400).json({ success: false, msg: 'Invalid request' });
+  }
+  try {
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({
+        success: false,
+        msg: `Could not find the course - ${courseId}`,
+      });
+    }
+    await Course.findByIdAndUpdate(courseId, { ...req.body }, { new: true });
+    return res
+      .status(200)
+      .json({ success: true, msg: 'Course modified successfully' });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }

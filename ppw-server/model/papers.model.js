@@ -42,6 +42,16 @@ const courseSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    added_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
+    edited_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
   },
   { timestamps: true }
 );

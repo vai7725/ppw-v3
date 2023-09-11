@@ -1,6 +1,8 @@
 import express from 'express';
 import {
+  editCourse,
   editUniversity,
+  fetchCourse,
   fetchCourses,
   fetchExamYears,
   fetchFilteredPapers,
@@ -33,6 +35,11 @@ router
   .route('/courses')
   .get(fetchCourses)
   .post(verifyJWT, verifyPermission(['ADMIN', 'MANAGER']), saveCourse);
+
+router
+  .route('/course/:courseId')
+  .get(fetchCourse)
+  .put(verifyJWT, verifyPermission(['ADMIN']), editCourse);
 
 // papers routes
 router

@@ -25,6 +25,7 @@ import EditUniversityPage from './pages/EditUniversityPage';
 import AddPaperPage from './pages/AddPaperPage';
 import AddCoursePage from './pages/AddCoursePage';
 import DetailsPage from './pages/DetailsPage';
+import EditCoursePage from './pages/EditCoursePage';
 
 const router = createBrowserRouter([
   {
@@ -121,6 +122,14 @@ const router = createBrowserRouter([
     element: (
       <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
         <AddCoursePage />
+      </AuthorizeAccess>
+    ),
+  },
+  {
+    path: '/edit-course/:courseId',
+    element: (
+      <AuthorizeAccess role={['ADMIN']}>
+        <EditCoursePage />
       </AuthorizeAccess>
     ),
   },

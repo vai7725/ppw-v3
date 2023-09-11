@@ -31,10 +31,31 @@ export const saveUniversity = (data) => {
 };
 
 export const modifyUniversity = (universityId, data) => {
-  console.log(universityId, data);
   return new Promise(async (resolve, reject) => {
     try {
       const res = API.put(`/api/university/${universityId}`, data);
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const fetchCourse = (courseId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.get(`/api/course/${courseId}`);
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const editCourse = (courseId, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.put(`/api/course/${courseId}`, data);
       return resolve(res);
     } catch (error) {
       return reject(error);
