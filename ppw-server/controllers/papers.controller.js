@@ -118,7 +118,7 @@ export const saveCourse = async (req, res) => {
 export const fetchCourses = async (req, res) => {
   const { universityId } = req.query;
   try {
-    const courses = await Course.find({ universityId });
+    const courses = await Course.find({ universityId, deleted: { $ne: true } });
 
     if (!courses) {
       return res.status(404).json({ success: false, msg: 'No courses found' });

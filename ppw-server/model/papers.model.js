@@ -42,12 +42,22 @@ const courseSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    deleted: {
+      type: Boolean,
+      trim: true,
+      default: false,
+    },
     added_by: {
       type: String,
       trim: true,
       default: undefined,
     },
     edited_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
+    deleted_by: {
       type: String,
       trim: true,
       default: undefined,

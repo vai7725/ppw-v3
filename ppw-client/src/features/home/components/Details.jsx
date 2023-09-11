@@ -8,16 +8,13 @@ import {
   fetchUniversityAsync,
 } from '../../papers/papersSlice';
 import {
-  ChevronRightIcon,
-  ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
   PlusCircleIcon,
   DocumentPlusIcon,
-  ExclamationCircleIcon,
-  EllipsisVerticalIcon,
 } from '@heroicons/react/24/outline';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
+import { editCourseAsync, fetchCourseAsync } from '../homeSlice';
 
 const Details = () => {
   const { universityId } = useParams();
@@ -48,11 +45,29 @@ const Details = () => {
           <p>{university?.description}</p>
         </div>
         <div className="w-1/2 min-w-fit p-4">
-          <h1>
-            {' '}
-            <span className="font-semibold">Total courses </span> -{' '}
-            {courses.length}
-          </h1>
+          <div className="flex justify-between items-center">
+            <h1>
+              {' '}
+              <span className="font-semibold">Total courses </span> -{' '}
+              {courses.length}
+            </h1>
+            <div className="flex items-center justify-center border  rounded-sm">
+              <Link
+                to={`/add-course/${universityId}`}
+                className="hover:bg-gray-200 p-1"
+                title="Add course"
+              >
+                <PlusCircleIcon className="w-6 h-6 mx-1 rounded-sm " />
+              </Link>
+              <Link
+                to={`/add-paper/${universityId}`}
+                className="hover:bg-gray-200 p-1 hover:text-green-700"
+                title="Add paper"
+              >
+                <DocumentPlusIcon className="h-6 w-6 mx-1 rounded-sm" />
+              </Link>
+            </div>
+          </div>
           <table className="divide-y mb-6 divide-gray-600 min-w-full border-gray-600 border-[1px] m-2 overflow-auto">
             <thead className="bg-gray-100">
               <tr>
@@ -63,7 +78,7 @@ const Details = () => {
                   Title
                 </th>
                 <th className="border-[1px] border-gray-600 text-center">
-                  Duration years
+                  Duration
                 </th>
                 {user && user?.role === 'ADMIN' && (
                   <th className="border-[1px] border-gray-600 text-center">
@@ -86,10 +101,35 @@ const Details = () => {
                   </td>
                   {user && user.role === 'ADMIN' && (
                     <td className=" border-gray-600 text-center flex justify-center items-center">
-                      <Link to={`/edit-course/${course._id}`}>
+                      <Link
+                        to={`/edit-course/${course._id}`}
+                        title={`Edit ${course.title}`}
+                      >
                         <PencilSquareIcon className="h-5 w-5 mx-1 text-indigo-700" />
                       </Link>
-                      <button>
+
+                      <button
+                        title={`Delete ${course.title}`}
+                        onClick={() => {
+                          dispatch(
+                            editCourseAsync({
+                              courseId: course._id,
+                              editData: { deleted: true },
+                            })
+                          ).then((res) => {
+                            if (res?.payload?.success) {
+                              toast.success(
+                                <p className="toast-msg">{res?.payload?.msg}</p>
+                              );
+                              dispatch(fetchCoursesAsync(universityId));
+                            } else {
+                              toast.error(
+                                <p className="toast.err">{res?.payload?.msg}</p>
+                              );
+                            }
+                          });
+                        }}
+                      >
                         <TrashIcon className="h-5 w-5 mx-1 text-red-700" />
                       </button>
                     </td>

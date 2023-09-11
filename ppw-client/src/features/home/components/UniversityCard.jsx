@@ -1,12 +1,8 @@
 // src/Slider.js
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import {
-  ChevronRightIcon,
-  ChevronLeftIcon,
   PencilSquareIcon,
   TrashIcon,
-  PlusCircleIcon,
-  DocumentPlusIcon,
   ExclamationCircleIcon,
   EllipsisVerticalIcon,
 } from '@heroicons/react/24/outline';
@@ -88,20 +84,7 @@ const Slider = () => {
                             <PencilSquareIcon className="w-5 h-5 mr-1" />
                             Edit university
                           </Link>
-                          <Link
-                            to={`/add-course/${university._id}`}
-                            className=" flex items-center justify-start text-white pl-2 pr-4 text-sm hover:bg-gray-600 w-full  py-1 my-1 "
-                          >
-                            <PlusCircleIcon className="w-5 h-5 mr-1" />
-                            Add courses
-                          </Link>
-                          <Link
-                            to={`/add-paper/${university._id}`}
-                            className=" flex items-center justify-start text-white pl-2 pr-4 text-sm hover:bg-gray-600 w-full  py-1 my-1 "
-                          >
-                            <DocumentPlusIcon className="w-5 h-5 mr-1" />
-                            Add paper
-                          </Link>
+
                           <button
                             onClick={() => {
                               dispatch(
@@ -136,60 +119,6 @@ const Slider = () => {
                     </>
                   )}
               </div>
-              {/* {user && (user.role === 'ADMIN' || user.role === 'MANAGER') && (
-                  <div className="flex items-center justify-between w-full">
-                    <Link
-                      to={`/add-course/${university._id}`}
-                      className=" flex items-center justify-center text-center my-1 bg-green-700 text-white w-full mx-1 py-1 rounded-md hover:bg-green-600"
-                    >
-                      <PlusCircleIcon className="w-6 h-6 mr-1" />
-                      Add courses
-                    </Link>
-                    <Link
-                      to={`/add-paper/${university._id}`}
-                      className="flex items-center justify-center text-center my-1  bg-blue-700 text-white w-full mx-1 py-1 rounded-md hover:bg-blue-600"
-                    >
-                      <DocumentPlusIcon className="w-6 h-6 mr-1" />
-                      Add paper
-                    </Link>
-                  </div>
-                )}
-                {user && user.role === 'ADMIN' && (
-                  <div className="flex items-center justify-between w-full">
-                    <Link
-                      to={`/edit-university/${university._id}`}
-                      className=" flex items-center justify-center text-center my-1 bg-sky-700 text-white w-full mx-1 py-1 rounded-md hover:bg-sky-600"
-                    >
-                      <PencilSquareIcon className="w-6 h-6 mr-1" />
-                      Edit
-                    </Link>
-                    <button
-                      onClick={() => {
-                        dispatch(
-                          modifyUniversityAsync({
-                            universityId: university._id,
-                            data: { deleted: true },
-                          })
-                        ).then((res) => {
-                          if (res?.payload?.success) {
-                            toast.success(
-                              <p className="toast-msg">{res?.payload?.msg}</p>
-                            );
-                            dispatch(fetchUniversitiesAsync());
-                          } else {
-                            toast.error(
-                              <p className="toast.err">{res?.payload?.msg}</p>
-                            );
-                          }
-                        });
-                      }}
-                      className="flex items-center justify-center text-center my-1  bg-red-700 text-white w-full mx-1 py-1 rounded-md hover:bg-red-600"
-                    >
-                      <TrashIcon className="w-6 h-6 mr-1" />
-                      Delete
-                    </button>
-                  </div>
-                )} */}
             </div>
           ))}
         </div>
