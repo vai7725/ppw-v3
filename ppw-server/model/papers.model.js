@@ -103,6 +103,21 @@ const paperSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    added_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
+    edited_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
+    deleted_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
   },
   {
     timestamps: true,

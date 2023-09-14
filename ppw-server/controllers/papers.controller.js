@@ -99,7 +99,10 @@ export const saveCourse = async (req, res) => {
         .json({ success: false, msg: `Course already exists` });
     }
 
-    const course = await Course.create(req.body);
+    const course = await Course.create({
+      ...req.body,
+      added_by: req.user.username,
+    });
 
     if (!course) {
       return res
@@ -164,7 +167,11 @@ export const editCourse = async (req, res) => {
         msg: `Could not find the course - ${courseId}`,
       });
     }
-    await Course.findByIdAndUpdate(courseId, { ...req.body }, { new: true });
+    await Course.findByIdAndUpdate(
+      courseId,
+      { ...req.body, edited_by: req.user.username },
+      { new: true }
+    );
     return res
       .status(200)
       .json({ success: true, msg: 'Course modified successfully' });
@@ -210,7 +217,7 @@ export const savePapers = async (req, res) => {
 export const fetchPapers = async (req, res) => {
   const { universityId, page } = req.query;
   try {
-    const limit = 30;
+    const limit = 15;
     const skip = (+page - 1) * +limit;
     const papers = await Paper.find({ universityId }).skip(skip).limit(limit);
     if (!papers) {
@@ -222,6 +229,26 @@ export const fetchPapers = async (req, res) => {
       papers,
       papersFiltered: false,
     });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const fetchPaperDetails = async (req, res) => {
+  const { paperId } = req.params;
+  if (!paperId) {
+    return res.status(400).json({ success: false, msg: 'Invalid request' });
+  }
+
+  try {
+    const paper = await Paper.findById(paperId);
+    if (!paper) {
+      return res.status(404).json({
+        success: false,
+        msg: `No paper found with the id - ${paperId}`,
+      });
+    }
+    return res.status(200).json({ success: true, msg: 'Paper found', paper });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }
@@ -323,6 +350,37 @@ export const updatePaperViews = async (req, res) => {
     return res
       .status(200)
       .json({ success: true, msg: 'Views updated successfully.' });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const editPaper = async (req, res) => {
+  const { paperId } = req.params;
+  if (!paperId) {
+    return res.status(400).json({ success: false, msg: 'Invalid request' });
+  }
+  try {
+    const paper = await Paper.findById(paperId);
+
+    if (!paper) {
+      return res
+        .status(404)
+        .json({ success: false, msg: `No paper found with the id ${paperId}` });
+    }
+
+    await Paper.findByIdAndUpdate(
+      paperId,
+      {
+        ...req.body,
+        edited_by: req.user.username,
+      },
+      { new: true }
+    );
+
+    return res
+      .status(200)
+      .json({ success: true, msg: 'Paper modified successfully.' });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }

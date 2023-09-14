@@ -47,3 +47,23 @@ export const maxYearProvider = (courses, selectedCourse) => {
   });
   return result;
 };
+
+export const courseNameFinder = (courses, courseId) => {
+  let courseName;
+  courses.forEach((course) => {
+    if (course._id === courseId) {
+      courseName = course.title;
+    }
+  });
+  return courseName;
+};
+
+export const extractCourseYear = (courses, courseId) => {
+  let courseYear;
+  courses.forEach((course) => {
+    if (course._id === courseId) {
+      courseYear = course.duration_years;
+    }
+  });
+  return courseYear;
+};

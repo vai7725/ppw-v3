@@ -93,7 +93,7 @@ export const fetchFilteredPapers = (
 export const updatePaperViews = (paperId, file_link) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = API.put(`/api/papers/${paperId}`, {
+      const res = API.patch(`/api/papers/${paperId}`, {
         params: { file_link },
       });
       return resolve(res);
@@ -118,6 +118,28 @@ export const saveCourse = (data) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = API.post(`/api/courses`, data);
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const fetchPaper = (paperId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.get(`/api/papers/${paperId}`);
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const editPaper = (paperId, data) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = API.put(`/api/papers/${paperId}`, data);
       return resolve(res);
     } catch (error) {
       return reject(error);

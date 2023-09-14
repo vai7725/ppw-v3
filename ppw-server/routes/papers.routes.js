@@ -1,11 +1,13 @@
 import express from 'express';
 import {
   editCourse,
+  editPaper,
   editUniversity,
   fetchCourse,
   fetchCourses,
   fetchExamYears,
   fetchFilteredPapers,
+  fetchPaperDetails,
   fetchPapers,
   fetchSubjectTitles,
   fetchUniversities,
@@ -44,10 +46,14 @@ router
 // papers routes
 router
   .route('/papers')
-  .post(verifyJWT, verifyPermission(['ADMIN', 'MANAGER']), savePapers)
-  .get(fetchPapers);
+  .get(fetchPapers)
+  .post(verifyJWT, verifyPermission(['ADMIN', 'MANAGER']), savePapers);
 
-router.route('/papers/:paperId').put(updatePaperViews);
+router
+  .route('/papers/:paperId')
+  .get(fetchPaperDetails)
+  .patch(updatePaperViews)
+  .put(verifyJWT, verifyPermission(['ADMIN']), editPaper);
 
 router
   .route('/papers/:courseId/:exam_year/:subject_title')

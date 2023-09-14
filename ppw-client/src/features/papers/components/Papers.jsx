@@ -6,12 +6,17 @@ import {
   clearUniversity,
   fetchPapersAsync,
   fetchUniversityAsync,
+  resetPage,
   updatePaperViewsAsync,
 } from '../papersSlice';
 import LoadingPage from '../../../pages/LoadingPage';
 import { examYearObj, idExtractor } from '../../../utils/helper';
 import InfiniteScroll from 'react-infinite-scroll-component';
-import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
+import {
+  ExclamationTriangleIcon,
+  PencilSquareIcon,
+  TrashIcon,
+} from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
 
 export default function Papers({ universityId }) {
@@ -29,6 +34,7 @@ export default function Papers({ universityId }) {
     dispatch(fetchUniversityAsync(universityId));
     return () => {
       dispatch(clearUniversity());
+      dispatch(resetPage());
     };
   }, [universityId]);
 
@@ -40,6 +46,10 @@ export default function Papers({ universityId }) {
   }, []);
 
   const examYears = examYearObj();
+
+  const handleEditNavigate = (e, paperId) => {
+    navigate(`/edit-paper/${paperId}`);
+  };
 
   return (
     <div className="bg-white">
@@ -73,10 +83,10 @@ export default function Papers({ universityId }) {
                 <a
                   key={_id}
                   className="group relative  justify-between p-1 bg-indigo-100 rounded cursor-pointer"
-                  onClick={() => {
-                    dispatch(
-                      updatePaperViewsAsync({ paperId: _id, file_link })
-                    );
+                  onClick={(e) => {
+                    // dispatch(
+                    //   updatePaperViewsAsync({ paperId: _id, file_link })
+                    // );
                   }}
                   href={file_link}
                   target="_blank"
@@ -102,9 +112,30 @@ export default function Papers({ universityId }) {
                         <p className="mt-1 text-sm text-gray-500">
                           {courseNames[courseId]} - {examYears[exam_year]}
                         </p>
-                        <p className="text-sm font-semibold text-gray-500">
-                          {paper_year}
-                        </p>
+                        <div className="flex justify-between items-center">
+                          <p className="text-sm font-semibold text-gray-500">
+                            {paper_year}
+                          </p>
+                          <div className="flex">
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigate(`/edit-paper/${_id}`);
+                              }}
+                            >
+                              <PencilSquareIcon className="h-5 w-5 text-indigo-800 hover:text-indigo-600" />
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                              }}
+                            >
+                              <TrashIcon className="h-5 w-5 text-red-800 hover:text-red-600" />
+                            </button>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>

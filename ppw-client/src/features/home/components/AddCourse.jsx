@@ -24,7 +24,6 @@ export default function AddCourse() {
   const { universityId } = useParams();
   const dispatch = useDispatch();
   const { university, selectedFilters } = useSelector((state) => state.papers);
-  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchUniversityAsync(universityId));
@@ -54,16 +53,16 @@ export default function AddCourse() {
           <form
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
-              dispatch(
-                saveCourseAsync({ ...data, universityId, added_by: user._id })
-              ).then((res) => {
-                if (res?.payload?.success) {
-                  toast.success(res?.payload?.msg);
-                  reset();
-                } else {
-                  toast.error(res?.payload?.msg);
+              dispatch(saveCourseAsync({ ...data, universityId })).then(
+                (res) => {
+                  if (res?.payload?.success) {
+                    toast.success(res?.payload?.msg);
+                    reset();
+                  } else {
+                    toast.error(res?.payload?.msg);
+                  }
                 }
-              });
+              );
             })}
           >
             <div>

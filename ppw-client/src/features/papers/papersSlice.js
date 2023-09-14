@@ -1,8 +1,10 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
+  editPaper,
   fetchCourses,
   fetchExamYears,
   fetchFilteredPapers,
+  fetchPaper,
   fetchPapers,
   fetchSubjectTitles,
   fetchUniversity,
@@ -20,8 +22,10 @@ const initialState = {
   university: {},
   courses: [],
   papers: [],
+  paper: {},
   subjectTitles: [],
   examYears: [],
+  subject_title_input: '',
   selectedFilters: {
     courseId: '',
     exam_year: '',
@@ -114,6 +118,30 @@ export const saveCourseAsync = createAsyncThunk(
   }
 );
 
+export const editPaperAsync = createAsyncThunk(
+  'papers/editPaper',
+  async ({ paperId, data }) => {
+    try {
+      const res = await editPaper(paperId, data);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
+export const fetchPaperAsync = createAsyncThunk(
+  'papers/fetchPaper',
+  async (paperId) => {
+    try {
+      const res = await fetchPaper(paperId);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
 export const papersSlice = createSlice({
   name: 'papers',
   initialState,
@@ -134,6 +162,15 @@ export const papersSlice = createSlice({
     },
     clearUniversity: (state) => {
       state.university = {};
+    },
+    clearPaper: (state) => {
+      state.paper = {};
+    },
+    handleSubjectTitleInput: (state, action) => {
+      state.subject_title_input = action.payload;
+    },
+    resetPage: (state) => {
+      state.page = 1;
     },
   },
   extraReducers: (builder) => {
@@ -162,8 +199,9 @@ export const papersSlice = createSlice({
         state.status = 'idle';
         state.papers = [...state.papers, ...action.payload.papers];
         state.page += 1;
-        if (action.payload.papers.length < 30) {
+        if (action.payload.papers.length < 15) {
           state.hasMorePages = false;
+          state.page = 1;
         } else {
           state.hasMorePages = true;
         }
@@ -210,6 +248,27 @@ export const papersSlice = createSlice({
       })
       .addCase(savePaperAsync.rejected, (state, action) => {
         state.status = 'idle';
+      })
+      .addCase(fetchPaperAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchPaperAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+        state.paper = action.payload.paper;
+        state.subject_title_input = action.payload.paper.subject_title;
+      })
+      .addCase(fetchPaperAsync.rejected, (state, action) => {
+        state.status = 'idle';
+        state.paper = {};
+      })
+      .addCase(editPaperAsync.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(editPaperAsync.fulfilled, (state, action) => {
+        state.status = 'idle';
+      })
+      .addCase(editPaperAsync.rejected, (state, action) => {
+        state.status = 'idle';
       });
   },
 });
@@ -220,6 +279,9 @@ export const {
   clearFilters,
   clearCourses,
   clearUniversity,
+  handleSubjectTitleInput,
+  clearPaper,
+  resetPage,
 } = papersSlice.actions;
 
 export default papersSlice.reducer;

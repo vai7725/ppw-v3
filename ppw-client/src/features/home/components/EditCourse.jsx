@@ -26,7 +26,6 @@ export default function EditCourse() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { course } = useSelector((state) => state.home);
-  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchCourseAsync(courseId));
@@ -52,7 +51,7 @@ export default function EditCourse() {
           <form
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
-              const editData = { ...data, edited_by: user._id };
+              const editData = { ...data };
               dispatch(editCourseAsync({ courseId, editData })).then((res) => {
                 if (res?.payload?.success) {
                   toast.success(res?.payload?.msg);
