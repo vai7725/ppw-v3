@@ -4,8 +4,10 @@ import { useEffect } from 'react';
 import {
   clearPapers,
   clearUniversity,
+  editPaperAsync,
   fetchPapersAsync,
   fetchUniversityAsync,
+  removeDeletedPaper,
   resetPage,
   updatePaperViewsAsync,
 } from '../papersSlice';
@@ -18,6 +20,7 @@ import {
   TrashIcon,
 } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 export default function Papers({ universityId }) {
   const dispatch = useDispatch();
@@ -130,6 +133,19 @@ export default function Papers({ universityId }) {
                               onClick={(e) => {
                                 e.preventDefault();
                                 e.stopPropagation();
+                                dispatch(
+                                  editPaperAsync({
+                                    paperId: _id,
+                                    data: { deleted: true },
+                                  })
+                                ).then((res) => {
+                                  if (res?.payload?.success) {
+                                    toast.success(res?.payload?.msg);
+                                    dispatch(removeDeletedPaper(_id));
+                                  } else {
+                                    toast.error(res?.payload?.msg);
+                                  }
+                                });
                               }}
                             >
                               <TrashIcon className="h-5 w-5 text-red-800 hover:text-red-600" />

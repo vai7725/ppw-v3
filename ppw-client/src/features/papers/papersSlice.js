@@ -172,6 +172,11 @@ export const papersSlice = createSlice({
     resetPage: (state) => {
       state.page = 1;
     },
+    removeDeletedPaper: (state, action) => {
+      state.papers = state.papers.filter(
+        (paper) => paper._id !== action.payload
+      );
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -282,6 +287,7 @@ export const {
   handleSubjectTitleInput,
   clearPaper,
   resetPage,
+  removeDeletedPaper,
 } = papersSlice.actions;
 
 export default papersSlice.reducer;

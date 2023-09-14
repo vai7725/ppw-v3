@@ -97,7 +97,6 @@ export default function EditPaper() {
           <form
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
-              console.log(data);
               dispatch(editPaperAsync({ paperId, data })).then((res) => {
                 if (res?.payload?.success) {
                   toast.success(res?.payload?.msg);

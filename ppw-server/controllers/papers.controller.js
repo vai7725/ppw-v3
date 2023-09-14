@@ -12,7 +12,10 @@ export const saveUniversity = async (req, res) => {
       });
     }
 
-    const university = await University.create(req.body);
+    const university = await University.create({
+      ...req.body,
+      added_by: req.user.username,
+    });
     if (!university) {
       return res
         .status(500)
@@ -43,6 +46,7 @@ export const editUniversity = async (req, res) => {
       universityId,
       {
         ...req.body,
+        edited_by: req.user.username,
       },
       { new: true }
     );
@@ -219,7 +223,9 @@ export const fetchPapers = async (req, res) => {
   try {
     const limit = 15;
     const skip = (+page - 1) * +limit;
-    const papers = await Paper.find({ universityId }).skip(skip).limit(limit);
+    const papers = await Paper.find({ universityId, deleted: { $ne: true } })
+      .skip(skip)
+      .limit(limit);
     if (!papers) {
       return res.status(404).json({ success: false, msg: 'No papers found' });
     }

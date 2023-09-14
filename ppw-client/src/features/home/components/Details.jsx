@@ -35,14 +35,22 @@ const Details = () => {
     <>
       <Toaster position="top-center" reverseOrder={false} />
       <section className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 flex items-center justify-center flex-wrap">
-        <div className="w-1/2 min-w-[300px] p-4 sm:border-r-2 my-4 text-center flex flex-col items-center justify-center bg-indigo-50 sm:bg-white">
+        <div className="w-1/2 min-w-[300px] p-4 sm:border-r-2 my-4  flex flex-col items-center justify-center bg-indigo-50 sm:bg-white">
           <img
             src={university?.cover}
             alt={university?.title}
             className="w-full sm:w-3/4"
           />
-          <h2 className="font-bold text-2xl">{university?.title}</h2>
-          <p>{university?.description}</p>
+          <h2 className="font-bold text-2xl w-full">{university?.title}</h2>
+          <p className="my-2">{university?.description}</p>
+          <p className="text-start w-full">
+            <span className="font-semibold">Added by </span>-{' '}
+            {university?.added_by || 'undefined'} ({university?.createdAt})
+          </p>
+          <p className="text-start w-full">
+            <span className="font-semibold">Edited by </span>-{' '}
+            {university?.edited_by || 'Not modified'} ({university?.updatedAt})
+          </p>
         </div>
         <div className="w-1/2 min-w-fit p-4">
           <div className="flex justify-between items-center">

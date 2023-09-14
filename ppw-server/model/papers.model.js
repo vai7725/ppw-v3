@@ -21,6 +21,16 @@ const universitySchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    added_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
+    edited_by: {
+      type: String,
+      trim: true,
+      default: undefined,
+    },
   },
   { timestamps: true }
 );
@@ -53,11 +63,6 @@ const courseSchema = new mongoose.Schema(
       default: undefined,
     },
     edited_by: {
-      type: String,
-      trim: true,
-      default: undefined,
-    },
-    deleted_by: {
       type: String,
       trim: true,
       default: undefined,
@@ -103,17 +108,16 @@ const paperSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    deleted: {
+      type: Boolean,
+      default: undefined,
+    },
     added_by: {
       type: String,
       trim: true,
       default: undefined,
     },
     edited_by: {
-      type: String,
-      trim: true,
-      default: undefined,
-    },
-    deleted_by: {
       type: String,
       trim: true,
       default: undefined,
