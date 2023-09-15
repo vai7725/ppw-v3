@@ -27,6 +27,7 @@ export default function Papers({ universityId }) {
   const navigate = useNavigate();
   const { papers, courses, university, page, hasMorePages, errorMsg } =
     useSelector((state) => state.papers);
+  const { user } = useSelector((state) => state.auth);
 
   const courseNames = courses.reduce((acc, course) => {
     acc[course._id] = course.title;
@@ -119,38 +120,40 @@ export default function Papers({ universityId }) {
                           <p className="text-sm font-semibold text-gray-500">
                             {paper_year}
                           </p>
-                          <div className="flex">
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                navigate(`/edit-paper/${_id}`);
-                              }}
-                            >
-                              <PencilSquareIcon className="h-5 w-5 text-indigo-800 hover:text-indigo-600" />
-                            </button>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                dispatch(
-                                  editPaperAsync({
-                                    paperId: _id,
-                                    data: { deleted: true },
-                                  })
-                                ).then((res) => {
-                                  if (res?.payload?.success) {
-                                    toast.success(res?.payload?.msg);
-                                    dispatch(removeDeletedPaper(_id));
-                                  } else {
-                                    toast.error(res?.payload?.msg);
-                                  }
-                                });
-                              }}
-                            >
-                              <TrashIcon className="h-5 w-5 text-red-800 hover:text-red-600" />
-                            </button>
-                          </div>
+                          {user && user?.role === 'ADMIN' && (
+                            <div className="flex">
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  navigate(`/edit-paper/${_id}`);
+                                }}
+                              >
+                                <PencilSquareIcon className="h-5 w-5 text-indigo-800 hover:text-indigo-600" />
+                              </button>
+                              <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  dispatch(
+                                    editPaperAsync({
+                                      paperId: _id,
+                                      data: { deleted: true },
+                                    })
+                                  ).then((res) => {
+                                    if (res?.payload?.success) {
+                                      toast.success(res?.payload?.msg);
+                                      dispatch(removeDeletedPaper(_id));
+                                    } else {
+                                      toast.error(res?.payload?.msg);
+                                    }
+                                  });
+                                }}
+                              >
+                                <TrashIcon className="h-5 w-5 text-red-800 hover:text-red-600" />
+                              </button>
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
