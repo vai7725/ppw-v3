@@ -11,6 +11,7 @@ import crypto from 'crypto';
 const cookieOptions = {
   secure: process.env.NODE_ENV === 'production',
   httpOnly: true,
+  sameSite: 'none',
 };
 
 const generateAccessAndRefreshTokens = async (userId) => {
