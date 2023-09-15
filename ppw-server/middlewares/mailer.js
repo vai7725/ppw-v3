@@ -15,8 +15,7 @@ export const sendEmail = async (options) => {
   const emailHtml = mailGenerator.generate(options.mailContent);
 
   const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: process.env.SMTP_PORT,
+    service: 'gmail',
     auth: {
       user: process.env.SENDER_EMAIL,
       pass: process.env.SENDER_EMAIL_PASSWORD,
@@ -24,7 +23,7 @@ export const sendEmail = async (options) => {
   });
 
   const mail = {
-    from: process.env.CLIENT_URI,
+    from: process.env.PROJECT_TITLE,
     to: options.email,
     subject: options.subject,
     text: emailText,

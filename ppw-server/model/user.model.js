@@ -23,6 +23,7 @@ const userSchema = new mongoose.Schema(
       unique: [true, 'username must be unique'],
       lowercase: true,
       required: true,
+      minLength: [3, 'At least 3 characters are required'],
     },
     password: {
       type: String,

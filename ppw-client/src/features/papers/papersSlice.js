@@ -207,19 +207,17 @@ export const papersSlice = createSlice({
       })
       .addCase(fetchPapersAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        if (state.papers.length < 1) {
-          state.errorMsg = 'No papers found';
-        } else {
-          state.papers = [...state.papers, ...action.payload.papers];
-          state.page += 1;
-        }
+
+        state.papers = [...state.papers, ...action.payload.papers];
+        state.page += 1;
+
         if (action.payload.papers.length < 15) {
           state.hasMorePages = false;
           state.page = 1;
         } else {
           state.hasMorePages = true;
         }
-        state.papersFiltered = 'No papers found';
+        state.papersFiltered = action.payload?.papersFiltered || false;
       })
       .addCase(fetchPapersAsync.rejected, (state, action) => {
         state.status = 'idle';

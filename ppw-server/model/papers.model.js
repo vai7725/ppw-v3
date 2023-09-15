@@ -110,7 +110,7 @@ const paperSchema = new mongoose.Schema(
     },
     deleted: {
       type: Boolean,
-      default: undefined,
+      default: false,
     },
     added_by: {
       type: String,

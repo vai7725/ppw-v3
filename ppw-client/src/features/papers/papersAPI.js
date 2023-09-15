@@ -34,7 +34,7 @@ export const fetchPapers = (universityId, page) => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = API.get(`/api/papers`, {
-        params: { limit: 30, page, universityId },
+        params: { limit: 15, page, universityId },
       });
       return resolve(res);
     } catch (error) {
