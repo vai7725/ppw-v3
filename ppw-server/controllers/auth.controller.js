@@ -318,3 +318,23 @@ export const resendEmailVerification = async (req, res) => {
     return res.status(500).json({ succcess: false, msg: error.message });
   }
 };
+
+export const checkUsername = async (req, res) => {
+  const { username } = req.params;
+  if (!username || username.length < 3) {
+    return res
+      .status(206)
+      .json({ succcess: false, msg: 'At least three characters required' });
+  }
+  try {
+    const usernameArr = await User.distinct('username');
+    if (usernameArr.includes(username)) {
+      return res
+        .status(208)
+        .json({ succcess: false, msg: 'Username already taken' });
+    }
+    return res.status(202).json({ succcess: true, msg: 'Username available' });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};

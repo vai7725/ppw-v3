@@ -6,9 +6,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 import {
+  checkUsernameAsync,
   loginAsync,
   registerUserAsync,
   updatePasswordVisibility,
+  updateUsernameValue,
   updateVerificationSession,
 } from '../authSlice';
 import { useEffect } from 'react';
@@ -25,9 +27,16 @@ export default function Signup() {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { status, redirectToCreds, user, showPassword } = useSelector(
-    (state) => state.auth
-  );
+  const { status, username_input, user, showPassword, usernameValidationMsg } =
+    useSelector((state) => state.auth);
+
+  useEffect(() => {
+    const delay = setTimeout(() => {
+      dispatch(checkUsernameAsync(username_input));
+    }, 1000);
+
+    return () => clearTimeout(delay);
+  }, [username_input]);
 
   useEffect(() => {
     dispatch(updateVerificationSession(false));
@@ -93,26 +102,42 @@ export default function Signup() {
             </div>
 
             <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
-                Username
-              </label>
+              <div className="flex justify-between items-center ">
+                <label
+                  htmlFor="username"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Username
+                </label>
+                <p className="text-sm text-indigo-700 font-semibold">
+                  {username_input ? usernameValidationMsg : ''}
+                </p>
+              </div>
               <div className="mt-2">
                 <input
                   id="username"
                   {...register('username', {
                     required: 'Username is required',
+                    minLength: {
+                      value: 3,
+                      message:
+                        'Username must be at least three characters long',
+                    },
                   })}
                   type="text"
                   className={`block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6 ${
                     errors.username ? 'ring-red-800' : ''
                   }`}
+                  value={username_input}
+                  onChange={(e) =>
+                    dispatch(updateUsernameValue(e.target.value.trim()))
+                  }
+                  placeholder="Spaces are not allowed"
                 />
-                {errors.username && (
-                  <p className="text-sm text-red-800">
-                    {errors.username.message}
+
+                {errors?.username && (
+                  <p className="text-sm text-indigo-800">
+                    {errors?.username?.message}
                   </p>
                 )}
               </div>
@@ -145,6 +170,7 @@ export default function Signup() {
                 )}
               </div>
             </div>
+
             <div>
               <label
                 htmlFor="password"

@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import {
+  checkUsername,
   fetchUser,
   forgotPassword,
   login,
@@ -18,6 +19,8 @@ const initialState = {
   activeForgotPasswordSession: false,
   errorMsg: '',
   showPassword: false,
+  usernameValidationMsg: '',
+  username_input: '',
 };
 
 export const registerUserAsync = createAsyncThunk(
@@ -76,6 +79,18 @@ export const resendVerificationEmailAsync = createAsyncThunk(
   }
 );
 
+export const checkUsernameAsync = createAsyncThunk(
+  'papers/checkUsername',
+  async (value) => {
+    try {
+      const res = await checkUsername(value);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
+  }
+);
+
 const authSlice = createSlice({
   name: 'auth',
   initialState,
@@ -94,6 +109,9 @@ const authSlice = createSlice({
     },
     updatePasswordVisibility: (state, action) => {
       state.showPassword = !state.showPassword;
+    },
+    updateUsernameValue: (state, action) => {
+      state.username_input = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -158,6 +176,13 @@ const authSlice = createSlice({
     builder.addCase(resendVerificationEmailAsync.fulfilled, (state, action) => {
       state.status = 'idle';
     });
+    builder.addCase(checkUsernameAsync.pending, (state, action) => {});
+    builder.addCase(checkUsernameAsync.fulfilled, (state, action) => {
+      state.usernameValidationMsg = action.payload.msg;
+    });
+    builder.addCase(checkUsernameAsync.rejected, (state, action) => {
+      state.usernameValidationMsg = action.payload.msg;
+    });
   },
 });
 
@@ -167,6 +192,7 @@ export const {
   updateAuthentication,
   updateForgotPasswordSession,
   updatePasswordVisibility,
+  updateUsernameValue,
 } = authSlice.actions;
 
 export default authSlice.reducer;

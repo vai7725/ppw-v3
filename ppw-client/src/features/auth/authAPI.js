@@ -4,7 +4,6 @@ const API = axios.create({
   baseURL: import.meta.env.VITE_SERVER_URI || 'http://localhost:3000',
   headers: {
     'Content-Type': 'application/json',
-    withCredentials: true,
   },
   withCredentials: true,
 });
@@ -80,6 +79,18 @@ export const resendVerificationEmail = () => {
   return new Promise(async (resolve, reject) => {
     try {
       const res = await API.post(`/auth/reset-password`);
+      resolve(res);
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
+export const checkUsername = (username) => {
+  return new Promise(async (resolve, reject) => {
+    if (!username) return;
+    try {
+      const res = await API.post(`/auth/check-username/${username}`);
       resolve(res);
     } catch (error) {
       reject(error);

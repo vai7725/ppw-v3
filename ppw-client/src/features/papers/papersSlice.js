@@ -52,8 +52,12 @@ export const fetchCoursesAsync = createAsyncThunk(
 export const fetchPapersAsync = createAsyncThunk(
   'papers/fetchPapers',
   async ({ universityId, page }) => {
-    const res = await fetchPapers(universityId, page);
-    return res.data;
+    try {
+      const res = await fetchPapers(universityId, page);
+      return res.data;
+    } catch (error) {
+      return error.response.data;
+    }
   }
 );
 
@@ -169,6 +173,7 @@ export const papersSlice = createSlice({
     handleSubjectTitleInput: (state, action) => {
       state.subject_title_input = action.payload;
     },
+
     resetPage: (state) => {
       state.page = 1;
     },
@@ -202,19 +207,23 @@ export const papersSlice = createSlice({
       })
       .addCase(fetchPapersAsync.fulfilled, (state, action) => {
         state.status = 'idle';
-        state.papers = [...state.papers, ...action.payload.papers];
-        state.page += 1;
+        if (state.papers.length < 1) {
+          state.errorMsg = 'No papers found';
+        } else {
+          state.papers = [...state.papers, ...action.payload.papers];
+          state.page += 1;
+        }
         if (action.payload.papers.length < 15) {
           state.hasMorePages = false;
           state.page = 1;
         } else {
           state.hasMorePages = true;
         }
-        state.papersFiltered = action.payload.papersFiltered;
+        state.papersFiltered = 'No papers found';
       })
       .addCase(fetchPapersAsync.rejected, (state, action) => {
         state.status = 'idle';
-        state.errorMsg = 'Some error occured. Try again later';
+        state.errorMsg = action.payload.msg;
       })
       .addCase(fetchExamYearsAsync.pending, (state) => {
         state.status = 'loading';
@@ -266,9 +275,7 @@ export const papersSlice = createSlice({
         state.status = 'idle';
         state.paper = {};
       })
-      .addCase(editPaperAsync.pending, (state) => {
-        state.status = 'loading';
-      })
+      .addCase(editPaperAsync.pending, (state) => {})
       .addCase(editPaperAsync.fulfilled, (state, action) => {
         state.status = 'idle';
       })

@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  checkUsername,
   forgotPasswordRequest,
   getUser,
   loginUser,
@@ -28,6 +29,8 @@ router.route('/forgot-password').post(forgotPasswordRequest);
 router.route('/verify-reset-link/:resetToken').get(verifyForgotPasswordLink);
 
 router.route('/reset-password').post(resetForgottenPassword);
+
+router.route('/check-username/:username').post(checkUsername);
 
 router
   .route('/resend-verification-email')
