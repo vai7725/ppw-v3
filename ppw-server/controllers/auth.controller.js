@@ -12,6 +12,8 @@ const cookieOptions = {
   secure: process.env.NODE_ENV === 'production',
   httpOnly: true,
   sameSite: 'none',
+  path: '/',
+  maxAge: 864000000,
 };
 
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -162,6 +164,8 @@ export const loginUser = async (req, res) => {
       success: true,
       msg: 'User logged in successfully',
       user: loggedInUser,
+      accessToken,
+      refreshToken,
     });
 };
 

@@ -155,8 +155,6 @@ const authSlice = createSlice({
     });
     builder.addCase(logoutUserAsync.rejected, (state, action) => {
       state.status = 'idle';
-      state.user = null;
-      state.isAuthenticated = false;
     });
     builder.addCase(forgotPasswordAsync.pending, (state, action) => {
       state.status = 'loading';
