@@ -14,7 +14,6 @@ const initialState = {
   status: 'idle',
   isAuthenticated: false,
   user: null,
-  redirectToCreds: false,
   verificationSession: false,
   activeForgotPasswordSession: false,
   errorMsg: '',
@@ -152,6 +151,7 @@ const authSlice = createSlice({
       state.status = 'idle';
       state.user = null;
       state.isAuthenticated = false;
+      document.cookie = `accessToken=${null}`;
     });
     builder.addCase(logoutUserAsync.rejected, (state, action) => {
       state.status = 'idle';

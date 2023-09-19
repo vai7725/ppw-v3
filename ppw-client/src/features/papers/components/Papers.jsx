@@ -22,11 +22,12 @@ import {
 import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-export default function Papers({ universityId }) {
+export default function Papers({ universityId, papers }) {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { papers, courses, university, page, hasMorePages, errorMsg } =
-    useSelector((state) => state.papers);
+  const { courses, university, page, hasMorePages, errorMsg } = useSelector(
+    (state) => state.papers
+  );
   const { user } = useSelector((state) => state.auth);
 
   const courseNames = courses.reduce((acc, course) => {
@@ -42,18 +43,14 @@ export default function Papers({ universityId }) {
     };
   }, [universityId]);
 
-  useEffect(() => {
-    dispatch(fetchPapersAsync({ universityId, page }));
-    return () => {
-      dispatch(clearPapers());
-    };
-  }, []);
+  // useEffect(() => {
+  //   dispatch(fetchPapersAsync({ universityId, page }));
+  //   return () => {
+  //     dispatch(clearPapers());
+  //   };
+  // }, []);
 
   const examYears = examYearObj();
-
-  const handleEditNavigate = (e, paperId) => {
-    navigate(`/edit-paper/${paperId}`);
-  };
 
   return (
     <div className="bg-white">
@@ -88,9 +85,9 @@ export default function Papers({ universityId }) {
                   key={_id}
                   className="group relative  justify-between p-1 bg-indigo-100 rounded cursor-pointer"
                   onClick={(e) => {
-                    // dispatch(
-                    //   updatePaperViewsAsync({ paperId: _id, file_link })
-                    // );
+                    dispatch(
+                      updatePaperViewsAsync({ paperId: _id, file_link })
+                    );
                   }}
                   href={file_link}
                   target="_blank"

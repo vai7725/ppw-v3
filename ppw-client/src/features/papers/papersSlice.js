@@ -182,6 +182,12 @@ export const papersSlice = createSlice({
         (paper) => paper._id !== action.payload
       );
     },
+    clearExamYears: (state) => {
+      state.examYears = [];
+    },
+    clearSubjectTitles: (state) => {
+      state.subjectTitles = [];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -293,6 +299,8 @@ export const {
   clearPaper,
   resetPage,
   removeDeletedPaper,
+  clearSubjectTitles,
+  clearExamYears,
 } = papersSlice.actions;
 
 export default papersSlice.reducer;

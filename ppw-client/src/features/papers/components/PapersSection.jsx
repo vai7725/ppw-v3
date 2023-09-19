@@ -22,6 +22,8 @@ import {
   clearPapers,
   clearFilters,
   clearCourses,
+  clearExamYears,
+  clearSubjectTitles,
 } from '../papersSlice';
 import { Link, useParams } from 'react-router-dom';
 import useCourseDuration from '../../../utils/useCourseDuration';
@@ -51,6 +53,7 @@ export default function PapersSection() {
     selectedFilters,
     papersFiltered,
     page,
+    papers,
   } = useSelector((state) => state.papers);
   const { universityId } = useParams();
   const { user } = useSelector((state) => state.auth);
@@ -59,6 +62,8 @@ export default function PapersSection() {
     dispatch(fetchCoursesAsync(universityId));
     return () => {
       dispatch(clearCourses());
+      dispatch(clearExamYears());
+      dispatch(clearSubjectTitles());
     };
   }, []);
 
@@ -100,6 +105,13 @@ export default function PapersSection() {
   const handlefilters = (key, value) => {
     dispatch(updateFilters({ [key]: value }));
   };
+
+  useEffect(() => {
+    dispatch(fetchPapersAsync({ universityId, page }));
+    return () => {
+      dispatch(clearPapers());
+    };
+  }, []);
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   useEffect(() => {
@@ -692,7 +704,7 @@ export default function PapersSection() {
                 </form>
                 {/* Product grid */}
                 <div className="lg:col-span-3">
-                  <Papers universityId={universityId} />
+                  <Papers universityId={universityId} papers={papers} />
                 </div>
               </div>
             </section>
