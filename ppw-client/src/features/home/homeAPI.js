@@ -1,12 +1,4 @@
-import axios from 'axios';
-
-const API = axios.create({
-  baseURL: import.meta.env.VITE_SERVER_URI,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  withCredentials: true,
-});
+import API from '../../config/axiosInstance';
 
 export const fetchUniversities = () => {
   return new Promise(async (resolve, reject) => {

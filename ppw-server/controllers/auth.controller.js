@@ -23,8 +23,6 @@ const generateAccessAndRefreshTokens = async (userId) => {
     const accessToken = user.generateAccessToken();
     const refreshToken = user.generateRefreshToken();
 
-    console.log('access' - accessToken);
-    console.log('refresh' - refreshToken);
     user.refreshToken = refreshToken;
 
     await user.save();
@@ -125,7 +123,6 @@ export const verifyEmail = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   const { username, password } = req.body;
-  console.log(req.body);
 
   if (!username && !password) {
     return res

@@ -159,7 +159,6 @@ export const fetchCourse = async (req, res) => {
 
 export const editCourse = async (req, res) => {
   const { courseId } = req.params;
-  console.log(req.body);
   if (!courseId) {
     return res.status(400).json({ success: false, msg: 'Invalid request' });
   }

@@ -85,7 +85,6 @@ export default function AddPaper() {
           <form
             className="space-y-6"
             onSubmit={handleSubmit((data) => {
-              console.log(data);
               dispatch(savePaperAsync({ ...data, universityId })).then(
                 (res) => {
                   if (res?.payload?.success) {

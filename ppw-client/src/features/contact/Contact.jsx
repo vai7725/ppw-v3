@@ -47,7 +47,6 @@ export default function Contact() {
       <form
         className="mx-auto mt-12 max-w-xl "
         onSubmit={handleSubmit((data) => {
-          console.log(data);
           toast.promise(dispatch(postContactQueryAsync(data)), {
             loading: 'Saving your query...',
             success: (
