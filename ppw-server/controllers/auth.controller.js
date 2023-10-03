@@ -9,11 +9,12 @@ import {
 import crypto from 'crypto';
 
 const cookieOptions = {
-  secure: process.env.NODE_ENV === 'production',
+  secure: true,
   httpOnly: true,
   sameSite: 'none',
   path: '/',
   maxAge: 864000000,
+  domain: process.env.CLIENT_URI_PROD,
 };
 
 const generateAccessAndRefreshTokens = async (userId) => {
@@ -161,8 +162,6 @@ export const loginUser = async (req, res) => {
       success: true,
       msg: 'User logged in successfully',
       user: loggedInUser,
-      accessToken,
-      refreshToken,
     });
 };
 

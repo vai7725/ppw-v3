@@ -125,7 +125,7 @@ const authSlice = createSlice({
     });
     builder.addCase(loginAsync.fulfilled, (state, action) => {
       state.status = 'idle';
-      document.cookie = `accessToken=${action.payload.accessToken}; refreshToken-${action.payload.refreshToken}`;
+      // document.cookie = `accessToken=${action.payload.accessToken};`;
     });
     builder.addCase(loginAsync.rejected, (state, action) => {
       state.status = 'idle';
@@ -151,7 +151,7 @@ const authSlice = createSlice({
       state.status = 'idle';
       state.user = null;
       state.isAuthenticated = false;
-      document.cookie = `accessToken=${null}`;
+      document.cookie = `accessToken=;expires=${Date.now()}`;
     });
     builder.addCase(logoutUserAsync.rejected, (state, action) => {
       state.status = 'idle';

@@ -13,7 +13,7 @@ import {
 } from './protectors/ProtectRoutes';
 import ProfilePage from './pages/ProfilePage';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchUserAsync } from './features/auth/authSlice';
 import EmailVerificationSuccess from './features/auth/components/EmailVerificationSuccess';
 import ForgotPassword from './features/auth/components/ForgotPassword';
@@ -156,9 +156,12 @@ function App() {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
+  const [token, setToken] = useState(document.cookie);
+
   useEffect(() => {
     dispatch(fetchUserAsync());
   }, [isAuthenticated]);
+
   return <RouterProvider router={router} />;
 }
 

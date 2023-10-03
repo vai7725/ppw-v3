@@ -25,6 +25,19 @@ export default function Login() {
 
   const { status, showPassword } = useSelector((state) => state.auth);
 
+  const onSubmit = async (data) => {
+    try {
+      const res = await dispatch(loginAsync(data));
+      if (res?.payload?.success) {
+        dispatch(fetchUserAsync());
+        navigate('/');
+        toast.success(res?.payload?.msg);
+      }
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
   return (
     <>
       <Toaster position="top-center" reverseOrder="false" />
@@ -40,19 +53,20 @@ export default function Login() {
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
           <form
             className="space-y-6"
-            onSubmit={handleSubmit((data) => {
-              dispatch(loginAsync(data)).then((res) => {
-                if (res?.payload?.success) {
-                  toast.success(
-                    <p className="toast-msg">{res?.payload?.msg}</p>
-                  );
-                  dispatch(fetchUserAsync());
-                  navigate('/');
-                } else {
-                  toast.error(<p className="toast-err">{res?.payload?.msg}</p>);
-                }
-              });
-            })}
+            // onSubmit={handleSubmit((data) => {
+            //   dispatch(loginAsync(data)).then((res) => {
+            //     if (res?.payload?.success) {
+            //       toast.success(
+            //         <p className="toast-msg">{res?.payload?.msg}</p>
+            //       );
+            //       dispatch(fetchUserAsync());
+            //       navigate('/');
+            //     } else {
+            //       toast.error(<p className="toast-err">{res?.payload?.msg}</p>);
+            //     }
+            //   });
+            // })}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <div>
               <label

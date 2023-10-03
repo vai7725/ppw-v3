@@ -231,13 +231,14 @@ export const papersSlice = createSlice({
       })
       .addCase(fetchExamYearsAsync.pending, (state) => {
         state.status = 'loading';
+        state.papers = [];
       })
       .addCase(fetchExamYearsAsync.fulfilled, (state, action) => {
         state.status = 'idle';
         state.examYears = action.payload.examYears;
         state.papers = action.payload.papers;
         state.hasMorePages = false;
-        state.papersFiltered = action.payload.papersFiltered;
+        state.papersFiltered = action.payload.papersFiltered || false;
       })
       .addCase(fetchSubjectTitlesAsync.pending, (state) => {
         state.status = 'loading';
