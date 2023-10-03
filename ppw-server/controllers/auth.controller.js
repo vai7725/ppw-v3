@@ -1,5 +1,3 @@
-import bcrypt from 'bcrypt';
-
 import { User } from '../model/user.model.js';
 import { sendEmail } from '../middlewares/mailer.js';
 import {
@@ -14,7 +12,7 @@ const cookieOptions = {
   sameSite: 'none',
   path: '/',
   maxAge: 864000000,
-  domain: process.env.CLIENT_URI_PROD,
+  domain: process.env.CLIENT_URI,
 };
 
 const generateAccessAndRefreshTokens = async (userId) => {
