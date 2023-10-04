@@ -10,6 +10,7 @@ import { connectDB } from './config/connect.db.js';
 import papersRoutes from './routes/papers.routes.js';
 import contactRoutes from './routes/contact.routes.js';
 import authRoutes from './routes/auth.routes.js';
+import generalRoutes from './routes/general.routes.js';
 
 // variables
 const app = express();
@@ -30,6 +31,7 @@ app.use(morgan('dev'));
 app.use('/api', papersRoutes);
 app.use('/contact', contactRoutes);
 app.use('/auth', authRoutes);
+app.use('/general', generalRoutes);
 
 // routes
 app.get('/', (req, res) => {

@@ -27,6 +27,7 @@ import AddCoursePage from './pages/AddCoursePage';
 import DetailsPage from './pages/DetailsPage';
 import EditCoursePage from './pages/EditCoursePage';
 import EditPaperPage from './pages/EditPaperPage';
+import API from './config/axiosInstance';
 
 const router = createBrowserRouter([
   {
@@ -156,11 +157,29 @@ function App() {
   const dispatch = useDispatch();
   const { isAuthenticated } = useSelector((state) => state.auth);
 
-  const [token, setToken] = useState(document.cookie);
+  const alreadyVisited = Boolean(localStorage.getItem('visitCredentials'));
+  console.log(alreadyVisited);
+
+  const updateUserVisit = async () => {
+    const { data } = await API.put(`/general/visits`);
+    if (data.success) {
+      localStorage.setItem(
+        'visitCredentials',
+        JSON.stringify({ visited: true })
+      );
+    }
+  };
 
   useEffect(() => {
     dispatch(fetchUserAsync());
   }, [isAuthenticated]);
+
+  useEffect(() => {
+    if (!alreadyVisited) {
+      console.log('here');
+      updateUserVisit();
+    }
+  }, []);
 
   return <RouterProvider router={router} />;
 }
