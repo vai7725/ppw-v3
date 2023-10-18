@@ -11,6 +11,7 @@ import papersRoutes from './routes/papers.routes.js';
 import contactRoutes from './routes/contact.routes.js';
 import authRoutes from './routes/auth.routes.js';
 import generalRoutes from './routes/general.routes.js';
+import authorizedRoutes from './routes/authorized.routes.js';
 
 // variables
 const app = express();
@@ -32,6 +33,7 @@ app.use('/api', papersRoutes);
 app.use('/contact', contactRoutes);
 app.use('/auth', authRoutes);
 app.use('/general', generalRoutes);
+app.use('/authorized', authorizedRoutes);
 
 // routes
 app.get('/', (req, res) => {

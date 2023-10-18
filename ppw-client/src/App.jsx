@@ -28,6 +28,7 @@ import DetailsPage from './pages/DetailsPage';
 import EditCoursePage from './pages/EditCoursePage';
 import EditPaperPage from './pages/EditPaperPage';
 import API from './config/axiosInstance';
+import DashboardPage from './pages/DashboardPage';
 
 const router = createBrowserRouter([
   {
@@ -151,6 +152,14 @@ const router = createBrowserRouter([
       </AuthorizeAccess>
     ),
   },
+  {
+    path: '/dashboard',
+    element: (
+      <AuthorizeAccess role={['ADMIN']}>
+        <DashboardPage />
+      </AuthorizeAccess>
+    ),
+  },
 ]);
 
 function App() {
@@ -158,7 +167,6 @@ function App() {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const alreadyVisited = Boolean(localStorage.getItem('visitCredentials'));
-  console.log(alreadyVisited);
 
   const updateUserVisit = async () => {
     const { data } = await API.put(`/general/visits`);
@@ -176,7 +184,6 @@ function App() {
 
   useEffect(() => {
     if (!alreadyVisited) {
-      console.log('here');
       updateUserVisit();
     }
   }, []);

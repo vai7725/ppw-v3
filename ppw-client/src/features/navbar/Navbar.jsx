@@ -5,6 +5,8 @@ import logo from '../../assets/logo.webp';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUserAsync } from '../auth/authSlice';
+import Footer from '../home/components/Footer';
+import DefaultAvatar from '../profile/DefaultAvatar';
 
 const navigation = [
   { name: 'Home', href: '/', current: false },
@@ -93,9 +95,12 @@ export default function Navbar({ children }) {
                       {user ? (
                         <Menu.Button className="relative flex rounded-full bg-gray-800  active:outline-none active:ring-2 ring-offset-2 active:ring-offset-gray-800 ">
                           <span className="absolute -inset-1.5" />
-                          <div className="w-8 h-8  rounded-full bg-purple-300 font-semibold text-center text-xl flex justify-center items-center capitalize">
-                            {user.name[0]}
-                          </div>
+                          <DefaultAvatar
+                            name={user?.name}
+                            width={8}
+                            height={8}
+                            text={'lg'}
+                          />
                         </Menu.Button>
                       ) : (
                         <Link
@@ -194,6 +199,7 @@ export default function Navbar({ children }) {
         )}
       </Disclosure>
       <main className="mx-auto w-full">{children}</main>
+      <Footer />
     </>
   );
 }

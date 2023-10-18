@@ -29,7 +29,7 @@ export const getContactQueries = async (req, res) => {
         .json({ success: false, msg: 'No contact queries found' });
     }
 
-    res.status(200).json({ success: true, contacts });
+    return res.status(200).json({ success: true, contacts });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }

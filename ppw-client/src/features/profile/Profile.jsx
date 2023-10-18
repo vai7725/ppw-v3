@@ -7,15 +7,20 @@ import {
   BriefcaseIcon,
   CheckBadgeIcon,
 } from '@heroicons/react/24/outline';
+import DefaultAvatar from './DefaultAvatar';
 
 const Profile = () => {
   const { user } = useSelector((state) => state.auth);
   return (
     <section className="w-[90%] min-w-[300px] relative my-20 py-4 m-auto px-2 sm:px-6 lg:px-8 border sm:w-fit flex justify-center items-center flex-col shadow-md rounded-md bg-indigo-50">
-      <div className="w-24 h-24  rounded-full bg-purple-300 font-semibold text-center text-4xl flex justify-center items-center capitalize  top-[-3rem] absolute shadow-md">
-        {user?.name[0]}
-      </div>
-      <div className="mt-10 text-center">
+      <DefaultAvatar
+        name={user.name}
+        width={24}
+        height={24}
+        className=" absolute shadow-md"
+        text={'4xl'}
+      />
+      <div className="mt-2 text-center">
         <p className="text-xl">{user?.name}</p>
         <p className="text-sm text-gray-500">
           <span className="text-gray-800 font-semibold">Username</span> -{' '}

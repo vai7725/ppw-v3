@@ -11,7 +11,6 @@ const Home = () => {
       <Toaster />
       <Main />
       <UniversitySection />
-      <Footer />
     </>
   );
 };
