@@ -15,10 +15,7 @@ const Profile = () => {
     <section className="w-[90%] min-w-[300px] relative my-20 py-4 m-auto px-2 sm:px-6 lg:px-8 border sm:w-fit flex justify-center items-center flex-col shadow-md rounded-md bg-indigo-50">
       <DefaultAvatar
         name={user.name}
-        width={24}
-        height={24}
-        className=" absolute shadow-md"
-        text={'4xl'}
+        classes={`w-24 h-24 text-4xl shadow-lg`}
       />
       <div className="mt-2 text-center">
         <p className="text-xl">{user?.name}</p>

@@ -22,8 +22,6 @@ export default function AddUniversity() {
 
   return (
     <div className=" bg-white px-6 py-12  lg:px-8">
-      <Toaster position="top-center" reverseOrder={false} />
-
       <div
         className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]"
         aria-hidden="true"

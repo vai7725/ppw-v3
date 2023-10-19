@@ -120,7 +120,6 @@ export default function PapersSection() {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className="bg-white">
         <div>
           {/* Mobile filter dialog */}

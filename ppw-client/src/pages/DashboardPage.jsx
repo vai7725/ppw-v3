@@ -1,7 +1,6 @@
 import React from 'react';
 import Navbar from '../features/navbar/Navbar';
-import Dashboars from '../features/dashboard/Dashboars';
-import Dashboard from '../features/dashboard/Dashboars';
+import Dashboard from '../features/dashboard/components/Dashboard';
 
 export default function DashboardPage() {
   return (

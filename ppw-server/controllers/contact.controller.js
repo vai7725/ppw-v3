@@ -21,7 +21,9 @@ export const contactHandler = async (req, res) => {
 
 export const getContactQueries = async (req, res) => {
   try {
-    const contacts = await Contact.find();
+    const contacts = await Contact.find({ resolved: { $ne: true } }).sort({
+      _id: 'asc',
+    });
 
     if (!contacts) {
       return res
@@ -30,6 +32,29 @@ export const getContactQueries = async (req, res) => {
     }
 
     return res.status(200).json({ success: true, contacts });
+  } catch (error) {
+    return res.status(500).json({ success: false, msg: error.message });
+  }
+};
+
+export const resolveContactQuery = async (req, res) => {
+  const { contactId } = req.params;
+  try {
+    const contact = await Contact.findById(contactId);
+
+    if (!contact) {
+      return res.status(204).json({
+        success: false,
+        msg: `No query found with the id ${contactId}`,
+      });
+    }
+
+    contact.resolved = true;
+    await contact.save();
+
+    return res
+      .status(200)
+      .json({ success: true, msg: 'Query resolved successfully', contactId });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }

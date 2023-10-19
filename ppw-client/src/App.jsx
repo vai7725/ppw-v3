@@ -29,6 +29,7 @@ import EditCoursePage from './pages/EditCoursePage';
 import EditPaperPage from './pages/EditPaperPage';
 import API from './config/axiosInstance';
 import DashboardPage from './pages/DashboardPage';
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
   {
@@ -188,7 +189,12 @@ function App() {
     }
   }, []);
 
-  return <RouterProvider router={router} />;
+  return (
+    <>
+      <Toaster position="top-center" reverseOrder={false} />
+      <RouterProvider router={router} />
+    </>
+  );
 }
 
 export default App;

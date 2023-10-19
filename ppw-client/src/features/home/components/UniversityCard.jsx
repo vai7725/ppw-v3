@@ -29,7 +29,6 @@ const Slider = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <div className=" w-full sm:w-[90%] my-8 h-fit">
         <div className="flex justify-center flex-wrap ">
           {universities.map((university) => (

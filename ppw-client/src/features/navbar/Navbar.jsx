@@ -97,9 +97,7 @@ export default function Navbar({ children }) {
                           <span className="absolute -inset-1.5" />
                           <DefaultAvatar
                             name={user?.name}
-                            width={8}
-                            height={8}
-                            text={'lg'}
+                            classes={`w-8 h-8 text-lg`}
                           />
                         </Menu.Button>
                       ) : (

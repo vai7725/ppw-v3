@@ -33,7 +33,6 @@ const Details = () => {
 
   return (
     <>
-      <Toaster position="top-center" reverseOrder={false} />
       <section className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 flex items-center justify-center flex-wrap">
         <div className="w-1/2 min-w-[300px] p-4 sm:border-r-2 my-4  flex flex-col items-center justify-center bg-indigo-50 sm:bg-white">
           <img

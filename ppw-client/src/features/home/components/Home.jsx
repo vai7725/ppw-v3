@@ -8,7 +8,6 @@ import { Toaster } from 'react-hot-toast';
 const Home = () => {
   return (
     <>
-      <Toaster />
       <Main />
       <UniversitySection />
     </>
