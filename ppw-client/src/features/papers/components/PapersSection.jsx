@@ -120,7 +120,7 @@ export default function PapersSection() {
 
   return (
     <>
-      <div className="bg-white">
+      <div className="bg-white min-h-screen">
         <div>
           {/* Mobile filter dialog */}
           <Transition.Root show={mobileFiltersOpen} as={Fragment}>
