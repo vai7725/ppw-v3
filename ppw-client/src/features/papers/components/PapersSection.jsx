@@ -27,9 +27,9 @@ import {
 } from '../papersSlice';
 import { Link, useParams } from 'react-router-dom';
 import useCourseDuration from '../../../utils/useCourseDuration';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { courseOptionsMaker, subjectOptionsMaker } from '../../../utils/helper';
-import { Toaster } from 'react-hot-toast';
+import LoadingPage from '../../../pages/LoadingPage';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -54,6 +54,7 @@ export default function PapersSection() {
     papersFiltered,
     page,
     papers,
+    filterOptionStatus,
   } = useSelector((state) => state.papers);
   const { universityId } = useParams();
   const { user } = useSelector((state) => state.auth);
@@ -66,14 +67,6 @@ export default function PapersSection() {
       dispatch(clearSubjectTitles());
     };
   }, []);
-
-  // const courseOptions = courses.map((course) => {
-  //   return {
-  //     value: course._id,
-  //     label: course.title,
-  //     checked: false,
-  //   };
-  // });
 
   const courseOptions = courseOptionsMaker(courses);
 
@@ -92,13 +85,7 @@ export default function PapersSection() {
   const subjectTitleFilters = {
     id: 'subject_title',
     name: 'Subjects',
-    // options: subjectTitles.map((title) => {
-    //   return {
-    //     value: title,
-    //     label: title,
-    //     checked: false,
-    //   };
-    // }),
+
     options: subjectOptionsMaker(subjectTitles),
   };
 
@@ -178,6 +165,7 @@ export default function PapersSection() {
                               dispatch(
                                 fetchPapersAsync({ universityId, page })
                               );
+                              reset();
                             }}
                             className="underline font-semibold text-sm"
                           >
@@ -283,7 +271,9 @@ export default function PapersSection() {
                               </Disclosure.Button>
                             </h3>
                             <Disclosure.Panel className="pt-6">
-                              {examYearFilters.options.length > 0 ? (
+                              {filterOptionStatus.examYear === 'loading' ? (
+                                <LoadingPage />
+                              ) : examYearFilters.options.length > 0 ? (
                                 <div className="space-y-4">
                                   {examYearFilters.options?.map(
                                     (option, optionIdx) => (
@@ -361,7 +351,9 @@ export default function PapersSection() {
                               </Disclosure.Button>
                             </h3>
                             <Disclosure.Panel className="pt-6">
-                              {subjectTitleFilters.options.length > 0 ? (
+                              {filterOptionStatus.subjectTitle === 'loading' ? (
+                                <LoadingPage />
+                              ) : subjectTitleFilters.options.length > 0 ? (
                                 <div className="space-y-4">
                                   {subjectTitleFilters.options?.map(
                                     (option, optionIdx) => (

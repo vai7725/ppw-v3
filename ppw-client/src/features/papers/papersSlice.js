@@ -15,6 +15,10 @@ import {
 
 const initialState = {
   status: 'idle',
+  filterOptionStatus: {
+    examYear: 'idle',
+    subjectTitle: 'idle',
+  },
   page: 1,
   errorMsg: '',
   hasMorePages: true,
@@ -232,9 +236,11 @@ export const papersSlice = createSlice({
       .addCase(fetchExamYearsAsync.pending, (state) => {
         state.status = 'loading';
         state.papers = [];
+        state.filterOptionStatus.examYear = 'loading';
       })
       .addCase(fetchExamYearsAsync.fulfilled, (state, action) => {
         state.status = 'idle';
+        state.filterOptionStatus.examYear = 'idle';
         state.examYears = action.payload.examYears;
         state.papers = action.payload.papers;
         state.hasMorePages = false;
@@ -242,9 +248,11 @@ export const papersSlice = createSlice({
       })
       .addCase(fetchSubjectTitlesAsync.pending, (state) => {
         state.status = 'loading';
+        state.filterOptionStatus.subjectTitle = 'loading';
       })
       .addCase(fetchSubjectTitlesAsync.fulfilled, (state, action) => {
         state.status = 'idle';
+        state.filterOptionStatus.subjectTitle = 'idle';
         state.subjectTitles = action.payload.paperTitles;
         state.papers = action.payload.papers;
         state.hasMorePages = false;
