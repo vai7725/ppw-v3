@@ -61,6 +61,8 @@ export default function PapersSection() {
 
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
+    window.scrollTo(0, 0);
+
     return () => {
       dispatch(clearCourses());
       dispatch(clearExamYears());

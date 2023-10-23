@@ -2,7 +2,6 @@ import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   clearUniversity,
-  fetchUniversityAsync,
   saveCourseAsync,
   updateFilters,
 } from '../../papers/papersSlice';
@@ -26,7 +25,6 @@ export default function AddCourse() {
   const { university, selectedFilters } = useSelector((state) => state.papers);
 
   useEffect(() => {
-    dispatch(fetchUniversityAsync(universityId));
     return () => {
       dispatch(clearUniversity());
     };

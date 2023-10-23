@@ -15,6 +15,7 @@ import {
 import LoadingPage from '../../../pages/LoadingPage';
 import { Link } from 'react-router-dom';
 import { Toaster, toast } from 'react-hot-toast';
+import { updateUniversity } from '../../papers/papersSlice';
 
 const Slider = () => {
   const dispatch = useDispatch();
@@ -22,7 +23,9 @@ const Slider = () => {
   const { status } = useSelector((state) => state.home);
   const { user } = useSelector((state) => state.auth);
   useEffect(() => {
-    dispatch(fetchUniversitiesAsync());
+    if (universities.length < 1) {
+      dispatch(fetchUniversitiesAsync());
+    }
   }, []);
 
   if (status === 'loading') return <LoadingPage />;
@@ -52,6 +55,7 @@ const Slider = () => {
               <div className="flex items-center justify-center w-full">
                 <Link
                   to={`/papers/university/${university._id}`}
+                  onClick={() => dispatch(updateUniversity(university))}
                   className="hero-btn text-center my-1"
                 >
                   Select
@@ -71,6 +75,9 @@ const Slider = () => {
                         <div className=" absolute right-8 bottom-12 flex flex-col  rounded-sm shadow-md bg-gray-800 ">
                           <Link
                             to={`/details/${university._id}`}
+                            onClick={() => {
+                              dispatch(toggleUniversityOptions(university._id));
+                            }}
                             className=" flex items-center justify-start text-white pl-2 pr-4 text-sm hover:bg-gray-600 w-full  py-1 my-1 "
                           >
                             <ExclamationCircleIcon className="w-5 h-5 mr-1" />
@@ -78,6 +85,10 @@ const Slider = () => {
                           </Link>
                           <Link
                             to={`/edit-university/${university._id}`}
+                            onClick={() => {
+                              dispatch(updateUniversity(university));
+                              dispatch(toggleUniversityOptions(university._id));
+                            }}
                             className=" flex items-center justify-start text-white pl-2 pr-4 text-sm hover:bg-gray-600 w-full  py-1 my-1 "
                           >
                             <PencilSquareIcon className="w-5 h-5 mr-1" />
@@ -101,7 +112,7 @@ const Slider = () => {
                                   dispatch(fetchUniversitiesAsync());
                                 } else {
                                   toast.error(
-                                    <p className="toast.err">
+                                    <p className="toast-err">
                                       {res?.payload?.msg}
                                     </p>
                                   );

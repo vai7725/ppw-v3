@@ -6,13 +6,8 @@ import {
   clearUniversity,
   editPaperAsync,
   fetchCoursesAsync,
-  fetchExamYearsAsync,
   fetchPaperAsync,
-  fetchSubjectTitlesAsync,
-  fetchUniversityAsync,
   handleSubjectTitleInput,
-  savePaperAsync,
-  updateFilters,
 } from '../../papers/papersSlice';
 import { useNavigate, useParams } from 'react-router-dom';
 import {

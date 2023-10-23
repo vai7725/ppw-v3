@@ -23,8 +23,8 @@ const Details = () => {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    dispatch(fetchUniversityAsync(universityId));
     dispatch(fetchCoursesAsync(universityId));
+    dispatch(fetchUniversityAsync(universityId));
     return () => {
       dispatch(clearUniversity());
       dispatch(clearCourses());
@@ -33,7 +33,7 @@ const Details = () => {
 
   return (
     <>
-      <section className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 flex items-center justify-center flex-wrap">
+      <section className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 flex items-center justify-center flex-wrap min-h-screen">
         <div className="w-1/2 min-w-[300px] p-4 sm:border-r-2 my-4  flex flex-col items-center justify-center bg-indigo-50 sm:bg-white">
           <img
             src={university?.cover}
@@ -58,20 +58,22 @@ const Details = () => {
               <span className="font-semibold">Total courses </span> -{' '}
               {courses.length}
             </h1>
-            <div className="flex items-center justify-center border  rounded-sm">
+            <div className="flex items-center justify-center border  rounded-sm flex-col sm:flex-row">
               <Link
                 to={`/add-course/${universityId}`}
-                className="hover:bg-gray-200 p-1"
+                className="hover:bg-gray-200 p-1 flex items-center justify-between w-full min-w-fit"
                 title="Add course"
               >
                 <PlusCircleIcon className="w-6 h-6 mx-1 rounded-sm " />
+                <span>Add course</span>
               </Link>
               <Link
                 to={`/add-paper/${universityId}`}
-                className="hover:bg-gray-200 p-1 hover:text-green-700"
+                className="hover:bg-gray-200 p-1 hover:text-green-700 flex items-center justify-between w-full"
                 title="Add paper"
               >
                 <DocumentPlusIcon className="h-6 w-6 mx-1 rounded-sm" />
+                <span>Add paper</span>
               </Link>
             </div>
           </div>

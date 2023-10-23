@@ -6,7 +6,6 @@ import {
   fetchCoursesAsync,
   fetchExamYearsAsync,
   fetchSubjectTitlesAsync,
-  fetchUniversityAsync,
   savePaperAsync,
   updateFilters,
 } from '../../papers/papersSlice';
@@ -42,7 +41,6 @@ export default function AddPaper() {
 
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
-    dispatch(fetchUniversityAsync(universityId));
     return () => {
       dispatch(clearCourses());
       dispatch(clearUniversity());

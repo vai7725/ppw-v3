@@ -1,25 +1,15 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
-import { Toaster, toast } from 'react-hot-toast';
+import { toast } from 'react-hot-toast';
 import { fetchUniversitiesAsync, modifyUniversityAsync } from '../homeSlice';
 import { useNavigate, useParams } from 'react-router-dom';
-import {
-  clearUniversity,
-  fetchUniversityAsync,
-} from '../../../features/papers/papersSlice';
+import { clearUniversity } from '../../../features/papers/papersSlice';
 import { useEffect } from 'react';
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
 
 export default function EditUniversity() {
   const {
     register,
     handleSubmit,
-    watch,
-    control,
-    reset,
     formState: { errors },
   } = useForm();
 
@@ -29,7 +19,6 @@ export default function EditUniversity() {
   const { university } = useSelector((state) => state.papers);
 
   useEffect(() => {
-    dispatch(fetchUniversityAsync(universityId));
     return () => {
       dispatch(clearUniversity());
     };

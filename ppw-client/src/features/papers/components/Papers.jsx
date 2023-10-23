@@ -6,7 +6,6 @@ import {
   clearUniversity,
   editPaperAsync,
   fetchPapersAsync,
-  fetchUniversityAsync,
   removeDeletedPaper,
   resetPage,
   updatePaperViewsAsync,
@@ -36,19 +35,11 @@ export default function Papers({ universityId, papers }) {
   }, {});
 
   useEffect(() => {
-    dispatch(fetchUniversityAsync(universityId));
     return () => {
       dispatch(clearUniversity());
       dispatch(resetPage());
     };
   }, [universityId]);
-
-  // useEffect(() => {
-  //   dispatch(fetchPapersAsync({ universityId, page }));
-  //   return () => {
-  //     dispatch(clearPapers());
-  //   };
-  // }, []);
 
   const examYears = examYearObj();
 

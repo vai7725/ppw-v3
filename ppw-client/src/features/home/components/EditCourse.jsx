@@ -1,16 +1,8 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  clearUniversity,
-  fetchUniversityAsync,
-  saveCourseAsync,
-  updateFilters,
-} from '../../papers/papersSlice';
 import { useNavigate, useParams } from 'react-router-dom';
-import { courseOptionsMaker, subjectOptionsMaker } from '../../../utils/helper';
 import { useForm } from 'react-hook-form';
-import useCourseDuration from '../../../utils/useCourseDuration';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { clearCourse, editCourseAsync, fetchCourseAsync } from '../homeSlice';
 
 export default function EditCourse() {

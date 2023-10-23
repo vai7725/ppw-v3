@@ -154,6 +154,9 @@ export const papersSlice = createSlice({
   name: 'papers',
   initialState,
   reducers: {
+    updateUniversity: (state, action) => {
+      state.university = action.payload;
+    },
     updateFilters: (state, action) => {
       const { payload } = action;
       state.selectedFilters = { ...state.selectedFilters, ...payload };
@@ -310,6 +313,7 @@ export const {
   removeDeletedPaper,
   clearSubjectTitles,
   clearExamYears,
+  updateUniversity,
 } = papersSlice.actions;
 
 export default papersSlice.reducer;
