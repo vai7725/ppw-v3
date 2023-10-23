@@ -80,6 +80,7 @@ export default function Papers({ universityId, papers }) {
                 exam_year,
                 paper_year,
                 file_link,
+                views,
               }) => (
                 <a
                   key={_id}
@@ -110,47 +111,52 @@ export default function Papers({ universityId, papers }) {
                         {subject_title}
                       </h2>
                       <div>
-                        <p className="mt-1 text-sm text-gray-500">
+                        <p className="mt-1 w-1/2 text-sm text-gray-500">
                           {courseNames[courseId]} - {examYears[exam_year]}
                         </p>
                         <div className="flex justify-between items-center">
                           <p className="text-sm font-semibold text-gray-500">
                             {paper_year}
                           </p>
-                          {user && user?.role === 'ADMIN' && (
-                            <div className="flex">
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  navigate(`/edit-paper/${_id}`);
-                                }}
-                              >
-                                <PencilSquareIcon className="h-5 w-5 text-indigo-800 hover:text-indigo-600" />
-                              </button>
-                              <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  dispatch(
-                                    editPaperAsync({
-                                      paperId: _id,
-                                      data: { deleted: true },
-                                    })
-                                  ).then((res) => {
-                                    if (res?.payload?.success) {
-                                      toast.success(res?.payload?.msg);
-                                      dispatch(removeDeletedPaper(_id));
-                                    } else {
-                                      toast.error(res?.payload?.msg);
-                                    }
-                                  });
-                                }}
-                              >
-                                <TrashIcon className="h-5 w-5 text-red-800 hover:text-red-600" />
-                              </button>
-                            </div>
-                          )}
+                          <div className="flex justify-end w-1/2">
+                            <p className="text-sm  text-gray-500">
+                              {views > 0 && `${views} views`}
+                            </p>
+                            {user && user?.role === 'ADMIN' && (
+                              <div className="flex">
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    navigate(`/edit-paper/${_id}`);
+                                  }}
+                                >
+                                  <PencilSquareIcon className="h-5 w-5 text-indigo-800 hover:text-indigo-600" />
+                                </button>
+                                <button
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    dispatch(
+                                      editPaperAsync({
+                                        paperId: _id,
+                                        data: { deleted: true },
+                                      })
+                                    ).then((res) => {
+                                      if (res?.payload?.success) {
+                                        toast.success(res?.payload?.msg);
+                                        dispatch(removeDeletedPaper(_id));
+                                      } else {
+                                        toast.error(res?.payload?.msg);
+                                      }
+                                    });
+                                  }}
+                                >
+                                  <TrashIcon className="h-5 w-5 text-red-800 hover:text-red-600" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     </div>

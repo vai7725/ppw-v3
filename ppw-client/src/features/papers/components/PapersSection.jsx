@@ -564,7 +564,9 @@ export default function PapersSection() {
                           </Disclosure.Button>
                         </h3>
                         <Disclosure.Panel className="pt-6">
-                          {examYearFilters.options.length > 0 ? (
+                          {filterOptionStatus.examYear === 'loading' ? (
+                            <LoadingPage />
+                          ) : examYearFilters.options.length > 0 ? (
                             <div className="space-y-4">
                               {examYearFilters.options?.map(
                                 (option, optionIdx) => (
@@ -573,7 +575,7 @@ export default function PapersSection() {
                                     className="flex items-center"
                                   >
                                     <input
-                                      id={`filter-${examYearFilters.id}-${optionIdx}`}
+                                      id={`filter-mobile-${examYearFilters.id}-${optionIdx}`}
                                       {...register(examYearFilters.id)}
                                       defaultValue={option.value}
                                       type="radio"
@@ -595,7 +597,7 @@ export default function PapersSection() {
                                     />
 
                                     <label
-                                      htmlFor={`filter-${examYearFilters.id}-${optionIdx}`}
+                                      htmlFor={`filter-mobile-${examYearFilters.id}-${optionIdx}`}
                                       className="ml-3 text-sm text-gray-600"
                                     >
                                       {option.label}
@@ -641,7 +643,9 @@ export default function PapersSection() {
                           </Disclosure.Button>
                         </h3>
                         <Disclosure.Panel className="pt-6">
-                          {subjectTitleFilters.options.length > 0 ? (
+                          {filterOptionStatus.subjectTitle === 'loading' ? (
+                            <LoadingPage />
+                          ) : subjectTitleFilters.options.length > 0 ? (
                             <div className="space-y-4">
                               {subjectTitleFilters.options?.map(
                                 (option, optionIdx) => (
@@ -650,7 +654,7 @@ export default function PapersSection() {
                                     className="flex items-center"
                                   >
                                     <input
-                                      id={`filter-${subjectTitleFilters.id}-${optionIdx}`}
+                                      id={`filter-mobile-${subjectTitleFilters.id}-${optionIdx}`}
                                       {...register(subjectTitleFilters.id)}
                                       defaultValue={option.value}
                                       type="radio"
@@ -674,7 +678,7 @@ export default function PapersSection() {
                                     />
 
                                     <label
-                                      htmlFor={`filter-${subjectTitleFilters.id}-${optionIdx}`}
+                                      htmlFor={`filter-mobile-${subjectTitleFilters.id}-${optionIdx}`}
                                       className="ml-3 text-sm text-gray-600"
                                     >
                                       {option.label}
