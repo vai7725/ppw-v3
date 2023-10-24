@@ -30,6 +30,8 @@ import EditPaperPage from './pages/EditPaperPage';
 import API from './config/axiosInstance';
 import DashboardPage from './pages/DashboardPage';
 import { Toaster } from 'react-hot-toast';
+import Contribute from './features/contribute/components/Contribute';
+import ContributePage from './pages/ContributePage';
 
 const router = createBrowserRouter([
   {
@@ -160,6 +162,10 @@ const router = createBrowserRouter([
         <DashboardPage />
       </AuthorizeAccess>
     ),
+  },
+  {
+    path: '/contribute',
+    element: <ContributePage />,
   },
 ]);
 

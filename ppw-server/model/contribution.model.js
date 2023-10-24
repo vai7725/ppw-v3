@@ -37,6 +37,10 @@ const contributionSchema = new mongoose.Schema(
       trim: true,
       default: undefined,
     },
+    agree_with_terms: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
     timestamps: true,

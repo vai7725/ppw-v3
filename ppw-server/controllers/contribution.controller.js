@@ -5,10 +5,12 @@ import { Contribution } from '../model/contribution.model.js';
 
 // contribution controller
 export const contributePaper = async (req, res) => {
+  console.log(req.user);
   try {
     const paper = await Contribution.create({
       ...req.body,
       file: 'dummy link',
+      uploaded_by: req.user?._id,
     });
 
     if (!paper) {
@@ -36,7 +38,7 @@ export const contributePaper = async (req, res) => {
 
     return res
       .status(200)
-      .json({ success: true, msg: 'Paper create successfully', paper });
+      .json({ success: true, msg: 'Paper stored successfully', paper });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }
