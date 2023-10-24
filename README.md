@@ -1,4 +1,4 @@
-# My MERN Stack Question Paper Website
+# My MERN Stack Question Paper Website - 'https://previouspapers.netlify.app'
 
 ## Introduction
 
@@ -7,6 +7,10 @@ This project is a comprehensive web application developed using the MERN (MongoD
 ## Active User Community
 
 One of the most significant achievements of this project is its active and engaged user community. My website has gained popularity among students, especially my college mates, who rely on it during exam times. The user base continues to grow, and the website plays a crucial role in their academic preparation.
+
+## Dynamic Paper Selection and Filtering
+
+One of the standout features of my website is the dynamic paper selection and filtering system. When users select a university, the website dynamically fetches all the available question papers from the database. This ensures that students have easy access to a wealth of academic resources at their fingertips.
 
 ## Features
 
@@ -20,6 +24,7 @@ The website offers several features, including different levels of authenticatio
    - Browse and watch previous year question papers.
    - Download question papers.
    - Access the about section to learn more about the website.
+   - Ask their queries in contact section.
    - Contribute question papers to the website.
 
 2. **Manager**:
@@ -31,8 +36,8 @@ The website offers several features, including different levels of authenticatio
 
 3. **Admin**:
    - Access all features available to managers and users.
-   - Delete universities and question papers.
-   - Manage users.
+   - Add and Delete universities and question papers.
+   - Manage user, query and contribution data.
    - Special dashboard to:
      - View user details.
      - Resolve contact queries.
