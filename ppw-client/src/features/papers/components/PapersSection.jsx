@@ -30,17 +30,12 @@ import useCourseDuration from '../../../utils/useCourseDuration';
 import { useForm } from 'react-hook-form';
 import { courseOptionsMaker, subjectOptionsMaker } from '../../../utils/helper';
 import LoadingPage from '../../../pages/LoadingPage';
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(' ');
-}
+import { Helmet } from 'react-helmet-async';
+import ogImg from '../../../assets/og-img.png';
 
 export default function PapersSection() {
   const {
     register,
-    handleSubmit,
-    watch,
-    control,
     reset,
     formState: { errors },
   } = useForm();
@@ -57,7 +52,6 @@ export default function PapersSection() {
     filterOptionStatus,
   } = useSelector((state) => state.papers);
   const { universityId } = useParams();
-  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     dispatch(fetchCoursesAsync(universityId));
@@ -103,12 +97,42 @@ export default function PapersSection() {
   }, []);
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  useEffect(() => {
-    document.title = `Previous year question papers | ${university.title} old papers | ${university.title} paper pattern | ${university.title} b sc bed old papers | ${university.title} ba bed old papers | ${university.title} previous year questions papers`;
-  }, []);
 
   return (
     <>
+      <Helmet>
+        <title>{university?.title} | Previous Year Question Papers</title>
+        <meta
+          name="description"
+          content="Explore a comprehensive collection of university question papers from Rajasthan. Access a wide range of academic resources for your studies"
+        />
+        <link
+          rel="canonical"
+          href={`${
+            import.meta.env.VITE_CLIENT_URI
+          }/papers/university/${universityId}`}
+        />
+        <meta
+          name="keywords"
+          content={`${university?.title} question paper, ${university?.title} previous year question papers, ${university?.title} study material, download ${university?.title} papers`}
+        />
+        <meta
+          property="og:title"
+          content={`${university?.title} | Previous Year Question Papers`}
+        />
+        <meta
+          property="og:description"
+          content="Contribute question papers to our site! Upload PDFs, help fellow students, and expand our educational resource"
+        />
+        <meta property="og:image" content={ogImg} />
+        <meta
+          property="og:url"
+          content={`${
+            import.meta.env.VITE_CLIENT_URI
+          }/papers/university/${universityId}`}
+        />
+        <meta property="og:type" content={`article`} />
+      </Helmet>
       <div className="bg-white min-h-screen">
         <div>
           {/* Mobile filter dialog */}
@@ -418,7 +442,7 @@ export default function PapersSection() {
             <div className="flex items-baseline justify-between border-b border-gray-200 pb-6 pt-10">
               <div className="flex justify-between items-center w-full">
                 <h1 className="text-3xl font-bold tracking-tight text-gray-900">
-                  Papers
+                  Question Papers
                 </h1>
               </div>
 

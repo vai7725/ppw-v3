@@ -2,6 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import { postContactQueryAsync } from './contactSlice';
 import { Toaster, toast } from 'react-hot-toast';
+import ogImg from '../../assets/og-img.png';
+import { Helmet } from 'react-helmet-async';
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(' ');
@@ -18,10 +20,38 @@ export default function Contact() {
   } = useForm();
 
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
 
   return (
     <div className=" bg-white px-6 py-12  lg:px-8">
+      <Helmet>
+        <title>Contact | Previous Year Question Papers</title>
+        <meta
+          name="description"
+          content="Got any problem in the website of any query in the mind? Reach out to us"
+        />
+        <link
+          rel="canonical"
+          href={`${import.meta.env.VITE_CLIENT_URI}/contact`}
+        />
+        <meta
+          name="keywords"
+          content="contact us, get in touch with us, iniquiries, feedback"
+        />
+        <meta
+          property="og:title"
+          content="Contact | Previous Year Question Papers"
+        />
+        <meta
+          property="og:description"
+          content="Got any problem in the website of any query in the mind? Reach out to us"
+        />
+        <meta property="og:image" content={ogImg} />
+        <meta
+          property="og:url"
+          content={`${import.meta.env.VITE_CLIENT_URI}/contact`}
+        />
+        <meta property="og:type" content={`article`} />
+      </Helmet>
       <div
         className="absolute inset-x-0 top-[-10rem] -z-10 transform-gpu overflow-hidden blur-3xl sm:top-[-20rem]"
         aria-hidden="true"
@@ -35,9 +65,9 @@ export default function Contact() {
         />
       </div>
       <div className="mx-auto max-w-2xl text-center">
-        <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
-          Contact us
-        </h2>
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
+          Reach out to us
+        </h1>
         <p className="mt-2 text-lg leading-8 text-gray-600">
           Get in Touch for Inquiries, Collaborations, or Support.
         </p>

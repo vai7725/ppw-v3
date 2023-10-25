@@ -1,11 +1,42 @@
+import { Helmet } from 'react-helmet-async';
 import { AiFillLinkedin, AiOutlineInstagram } from 'react-icons/ai';
+import ogImg from '../../assets/og-img.png';
 const About = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
+      <Helmet>
+        <title>About | Previous Year Question Papers</title>
+        <meta
+          name="description"
+          content="Boost your exam prep with our wide collection of past question papers from various universities of Rajasthan. Get ahead and excel!"
+        />
+        <link
+          rel="canonical"
+          href={`${import.meta.env.VITE_CLIENT_URI}/about`}
+        />
+        <meta
+          name="keywords"
+          content="about previous year question papers , what is previous year question papers, previous year question papers"
+        />
+        <meta
+          property="og:title"
+          content="About | Previous Year Question Papers"
+        />
+        <meta
+          property="og:description"
+          content="Access question papers of different universities of Rajasthan easily. Boost your studies. Visit now!"
+        />
+        <meta property="og:image" content={ogImg} />
+        <meta
+          property="og:url"
+          content={`${import.meta.env.VITE_CLIENT_URI}/about`}
+        />
+        <meta property="og:type" content={`article`} />
+      </Helmet>
       <main className=" mx-auto py-8 px-4 sm:px-9">
         {/* About us */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">About us</h2>
+          <h1 className="text-2xl font-semibold mb-4">Get to know us better</h1>
           <p className="text-gray-700 sm:px-8">
             Our website is a valuable resource for students looking to ace their
             exams. We provide a vast collection of previous year question papers
