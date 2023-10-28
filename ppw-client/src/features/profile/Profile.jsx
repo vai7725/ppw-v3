@@ -6,6 +6,7 @@ import {
   BookOpenIcon,
   BriefcaseIcon,
   CheckBadgeIcon,
+  StarIcon,
 } from '@heroicons/react/24/outline';
 import DefaultAvatar from './DefaultAvatar';
 
@@ -18,7 +19,15 @@ const Profile = () => {
         classes={`w-24 h-24 text-4xl shadow-lg`}
       />
       <div className="mt-2 text-center">
-        <p className="text-xl">{user?.name}</p>
+        <p className="text-xl flex items-center justify-center">
+          {user?.name}
+          {user?.isEmailVerified && (
+            <CheckBadgeIcon
+              className="h-5 w-5 ml-1 text-indigo-500"
+              title="Email is verified"
+            />
+          )}
+        </p>
         <p className="text-sm text-gray-500">
           <span className="text-gray-800 font-semibold">Username</span> -{' '}
           {user?.username}
@@ -41,8 +50,8 @@ const Profile = () => {
           <span>{user?.course || 'Not defined'}</span>
         </div>
         <div className="border-solid border-t-2 min-w-[290px] border-gray-300 w-full py-3 px-1 flex items-center justify-start text-gray-500">
-          <CheckBadgeIcon className="h-6 w-6 mr-1" />{' '}
-          <span>{user?.isEmailVerified ? 'Verified' : 'Not verified'}</span>
+          <StarIcon className="h-6 w-6 mr-1" />{' '}
+          <span>{user?.contribution_points} contribution points</span>
         </div>
       </div>
     </section>
