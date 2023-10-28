@@ -1,4 +1,4 @@
-import { DocumentIcon } from '@heroicons/react/24/solid';
+import { DocumentIcon, DocumentCheckIcon } from '@heroicons/react/24/outline';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -232,14 +232,14 @@ export default function Contribute() {
                   } px-6 py-10`}
                 >
                   <div className="text-center">
-                    <DocumentIcon
-                      className={`mx-auto h-12 w-12 ${
-                        file && file[0]?.type === 'application/pdf'
-                          ? 'text-indigo-200'
-                          : 'text-gray-300'
-                      }`}
-                      aria-hidden="true"
-                    />
+                    {file && file[0].type === 'application/pdf' ? (
+                      <DocumentCheckIcon className="mx-auto h-12 w-12 text-indigo-500" />
+                    ) : (
+                      <DocumentIcon
+                        className={`mx-auto h-12 w-12 text-gray-500`}
+                        aria-hidden="true"
+                      />
+                    )}
                     <div className="mt-4 flex text-sm leading-6 text-gray-600">
                       <input
                         id="file-upload"

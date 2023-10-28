@@ -36,7 +36,7 @@ const About = () => {
       <main className=" mx-auto py-8 px-4 sm:px-9">
         {/* About us */}
         <section className="mb-12">
-          <h1 className="text-2xl font-semibold mb-4">Get to know us better</h1>
+          <h1 className="text-4xl font-semibold mb-4">Get to know us better</h1>
           <p className="text-gray-700 sm:px-8">
             Our website is a valuable resource for students looking to ace their
             exams. We provide a vast collection of previous year question papers
