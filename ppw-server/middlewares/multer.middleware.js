@@ -2,9 +2,9 @@ import path from 'path';
 import multer from 'multer';
 
 const upload = multer({
-  dest: 'uploads/',
+  dest: 'tmp/',
   storage: multer.diskStorage({
-    destination: 'uploads/',
+    destination: 'tmp/',
     filename: (req, file, done) => {
       done(null, file.originalname);
     },

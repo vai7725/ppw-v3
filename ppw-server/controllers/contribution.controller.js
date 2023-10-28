@@ -27,7 +27,7 @@ export const contributePaper = async (req, res) => {
         if (result) {
           paper.file = result.secure_url;
           await paper.save();
-          await fs.rm(`uploads/${req.file.filename}`);
+          await fs.rm(`tmp/${req.file.filename}`);
         }
       } catch (error) {
         return res
