@@ -23,10 +23,33 @@ export const fetchContacts = () => {
 };
 
 export const resolveContactQuery = (contactId) => {
-  console.log(contactId);
   return new Promise(async (resolve, reject) => {
     try {
       const res = await API.put(`/contact/resolve/${contactId}`);
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const fetchContributedPapersData = () => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await API.get(`/contribute/paper`);
+      return resolve(res);
+    } catch (error) {
+      return reject(error);
+    }
+  });
+};
+
+export const acceptContribution = (contributionId, userId) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await API.put(
+        `/contribute/accept-contribution/${contributionId}?userId=${userId}`
+      );
       return resolve(res);
     } catch (error) {
       return reject(error);

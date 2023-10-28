@@ -19,7 +19,6 @@ import EmailVerificationSuccess from './features/auth/components/EmailVerificati
 import ForgotPassword from './features/auth/components/ForgotPassword';
 import ResetPassword from './features/auth/components/ResetPassword';
 import ResetPasswordSuccess from './features/auth/components/ResetPasswordSuccess';
-import AddUniversity from './features/home/components/AddUniversity';
 import AddUniversityPage from './pages/AddUniversityPage';
 import EditUniversityPage from './pages/EditUniversityPage';
 import AddPaperPage from './pages/AddPaperPage';
@@ -30,7 +29,6 @@ import EditPaperPage from './pages/EditPaperPage';
 import API from './config/axiosInstance';
 import DashboardPage from './pages/DashboardPage';
 import { Toaster } from 'react-hot-toast';
-import Contribute from './features/contribute/components/Contribute';
 import ContributePage from './pages/ContributePage';
 
 const router = createBrowserRouter([

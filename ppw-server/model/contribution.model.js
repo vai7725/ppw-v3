@@ -33,11 +33,14 @@ const contributionSchema = new mongoose.Schema(
       trim: true,
     },
     uploaded_by: {
-      type: String,
-      trim: true,
-      default: undefined,
+      username: { type: String },
+      userId: { type: String },
     },
     agree_with_terms: {
+      type: Boolean,
+      default: false,
+    },
+    accepted: {
       type: Boolean,
       default: false,
     },

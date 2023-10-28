@@ -57,6 +57,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    contribution_points: {
+      type: Number,
+      default: 0,
+    },
     refreshToken: {
       type: String,
     },
