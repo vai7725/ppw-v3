@@ -64,8 +64,6 @@ export const acceptPaperContribution = async (req, res) => {
   const { contributionId } = req.params;
   const { userId } = req.query;
 
-  console.log(req.params);
-  console.log(req.query);
   try {
     const contribution = await Contribution.findById(contributionId);
     const user = await User.findById(userId);
@@ -82,13 +80,11 @@ export const acceptPaperContribution = async (req, res) => {
     await contribution.save();
     await user.save();
 
-    return res
-      .status(200)
-      .json({
-        success: true,
-        msg: 'Contribution accepted',
-        contributionId: contribution._id,
-      });
+    return res.status(200).json({
+      success: true,
+      msg: 'Contribution accepted',
+      contributionId: contribution._id,
+    });
   } catch (error) {
     return res.status(500).json({ success: false, msg: error.message });
   }

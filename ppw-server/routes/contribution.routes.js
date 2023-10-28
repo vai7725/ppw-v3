@@ -5,7 +5,7 @@ import {
   fetchContributedPapers,
 } from '../controllers/contribution.controller.js';
 import upload from '../middlewares/multer.middleware.js';
-import { verifyJWT } from '../middlewares/auth.middleware.js';
+import { verifyJWT, verifyPermission } from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
@@ -13,10 +13,10 @@ const router = express.Router();
 router
   .route('/paper')
   .post(verifyJWT, upload.single('file'), contributePaper)
-  .get(fetchContributedPapers);
+  .get(verifyJWT, verifyPermission(['ADMIN']), fetchContributedPapers);
 
 router
   .route('/accept-contribution/:contributionId')
-  .put(acceptPaperContribution);
+  .put(verifyJWT, verifyPermission(['ADMIN']), acceptPaperContribution);
 
 export default router;
