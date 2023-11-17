@@ -5,6 +5,7 @@ const API = axios.create({
   headers: {
     'Content-Type': 'application/json',
     Authorization: document.cookie,
+    'Access-Control-Allow-Origin': import.meta.env.VITE_SERVER_URI,
   },
   withCredentials: true,
   credentials: 'include',
