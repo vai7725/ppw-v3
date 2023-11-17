@@ -12,7 +12,7 @@ const cookieOptions = {
   sameSite: 'none',
   path: '/',
   maxAge: 864000000,
-  domain: process.env.CLIENT_URI,
+  // domain: process.env.CLIENT_URI,
 };
 
 const generateAccessAndRefreshTokens = async (userId) => {
