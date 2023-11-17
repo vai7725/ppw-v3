@@ -35,6 +35,13 @@ cloudinary.v2.config({
   api_key: process.env.CLOUDINARY_API_KEY,
 });
 
+app.use((req, res, next) => {
+  res.set({
+    'Access-Control-Allow-Origin': process.env.CLIENT_URI,
+  });
+  next();
+});
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(morgan('dev'));
