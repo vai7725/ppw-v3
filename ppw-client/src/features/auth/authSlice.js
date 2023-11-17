@@ -125,7 +125,7 @@ const authSlice = createSlice({
     });
     builder.addCase(loginAsync.fulfilled, (state, action) => {
       state.status = 'idle';
-      // document.cookie = `accessToken=${action.payload.accessToken};`;
+      document.cookie = `accessToken=${action.payload.accessToken};`;
     });
     builder.addCase(loginAsync.rejected, (state, action) => {
       state.status = 'idle';
