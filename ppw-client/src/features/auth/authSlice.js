@@ -126,7 +126,6 @@ const authSlice = createSlice({
     });
     builder.addCase(loginAsync.fulfilled, (state, action) => {
       state.status = 'idle';
-      console.log(action.payload);
       // document.cookie = `accessToken=${action.payload.accessToken};`;
       // Cookies.set('accessToken', action.payload.accessToken, {
       //   expires: 10,
