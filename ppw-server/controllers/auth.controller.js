@@ -8,7 +8,7 @@ import crypto from 'crypto';
 
 const cookieOptions = {
   secure: true,
-  // httpOnly: true,
+  httpOnly: true,
   sameSite: 'none',
   path: '/',
   maxAge: 864000000,
