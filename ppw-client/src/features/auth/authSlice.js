@@ -9,6 +9,7 @@ import {
   resendVerificationEmail,
   resetPassword,
 } from './authAPI';
+import Cookies from 'js-cookie';
 
 const initialState = {
   status: 'idle',
@@ -125,7 +126,14 @@ const authSlice = createSlice({
     });
     builder.addCase(loginAsync.fulfilled, (state, action) => {
       state.status = 'idle';
-      document.cookie = `accessToken=${action.payload.accessToken};`;
+      console.log(action.payload);
+      // document.cookie = `accessToken=${action.payload.accessToken};`;
+      // Cookies.set('accessToken', action.payload.accessToken, {
+      //   expires: 10,
+      //   path: '/',
+      //   sameSite: 'none',
+      //   secure: true,
+      // });
     });
     builder.addCase(loginAsync.rejected, (state, action) => {
       state.status = 'idle';
@@ -151,7 +159,7 @@ const authSlice = createSlice({
       state.status = 'idle';
       state.user = null;
       state.isAuthenticated = false;
-      document.cookie = `accessToken=;expires=${Date.now()}`;
+      // Cookies.remove('accessToken');
     });
     builder.addCase(logoutUserAsync.rejected, (state, action) => {
       state.status = 'idle';

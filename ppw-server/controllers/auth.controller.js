@@ -8,7 +8,7 @@ import crypto from 'crypto';
 
 const cookieOptions = {
   secure: true,
-  httpOnly: true,
+  // httpOnly: true,
   sameSite: 'none',
   path: '/',
   maxAge: 864000000,
@@ -160,6 +160,8 @@ export const loginUser = async (req, res) => {
       success: true,
       msg: 'User logged in successfully',
       user: loggedInUser,
+      accessToken,
+      refreshToken,
     });
 };
 
