@@ -4,9 +4,9 @@ import { User } from '../model/user.model.js';
 import { tokenObj } from '../helpers/helper.js';
 
 export const verifyJWT = async (req, res, next) => {
-  const token = req.cookies?.accessToken;
-  // ||
-  // tokenObj(req.headers.authorization)?.accessToken;
+  const token =
+    req.cookies?.accessToken ||
+    tokenObj(req.headers.authorization)?.accessToken;
 
   if (!token) {
     return res
