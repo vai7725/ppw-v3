@@ -160,8 +160,6 @@ export const loginUser = async (req, res) => {
       success: true,
       msg: 'User logged in successfully',
       user: loggedInUser,
-      accessToken,
-      refreshToken,
     });
 };
 
