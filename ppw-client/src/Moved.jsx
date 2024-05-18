@@ -1,6 +1,6 @@
 export default function Moved() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center font-semibold bg-gray-200">
+    <div className="min-h-screen flex flex-col items-center justify-center font-semibold bg-gray-200 text-center">
       <p>
         This website is moved to{' '}
         <a href="https://previouspapers.vercel.app" className="underline">
