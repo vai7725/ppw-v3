@@ -30,141 +30,142 @@ import API from './config/axiosInstance';
 import DashboardPage from './pages/DashboardPage';
 import { Toaster } from 'react-hot-toast';
 import ContributePage from './pages/ContributePage';
+import Moved from './Moved';
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <HomePage />,
+    element: <Moved />,
   },
-  {
-    path: '/papers/university/:universityId',
-    element: <PapersPage />,
-  },
-  {
-    path: '/about',
-    element: <AboutPage />,
-  },
-  {
-    path: '/contact',
-    element: <ContactPage />,
-  },
-  {
-    path: '/login',
-    element: (
-      <ProtectLogin>
-        <Login />
-      </ProtectLogin>
-    ),
-  },
-  {
-    path: '/forgot-password',
-    element: (
-      <ProtectLogin>
-        <ForgotPassword />
-      </ProtectLogin>
-    ),
-  },
-  {
-    path: '/reset-password/:resetToken',
-    element: (
-      <ProtectLogin>
-        <ResetPassword />
-      </ProtectLogin>
-    ),
-  },
-  {
-    path: '/signup',
-    element: (
-      <ProtectLogin>
-        <Signup />
-      </ProtectLogin>
-    ),
-  },
-  {
-    path: '/email-verification-success',
-    element: <EmailVerificationSuccess />,
-  },
-  {
-    path: '/reset-password-success',
-    element: <ResetPasswordSuccess />,
-  },
+  // {
+  //   path: '/papers/university/:universityId',
+  //   element: <PapersPage />,
+  // },
+  // {
+  //   path: '/about',
+  //   element: <AboutPage />,
+  // },
+  // {
+  //   path: '/contact',
+  //   element: <ContactPage />,
+  // },
+  // {
+  //   path: '/login',
+  //   element: (
+  //     <ProtectLogin>
+  //       <Login />
+  //     </ProtectLogin>
+  //   ),
+  // },
+  // {
+  //   path: '/forgot-password',
+  //   element: (
+  //     <ProtectLogin>
+  //       <ForgotPassword />
+  //     </ProtectLogin>
+  //   ),
+  // },
+  // {
+  //   path: '/reset-password/:resetToken',
+  //   element: (
+  //     <ProtectLogin>
+  //       <ResetPassword />
+  //     </ProtectLogin>
+  //   ),
+  // },
+  // {
+  //   path: '/signup',
+  //   element: (
+  //     <ProtectLogin>
+  //       <Signup />
+  //     </ProtectLogin>
+  //   ),
+  // },
+  // {
+  //   path: '/email-verification-success',
+  //   element: <EmailVerificationSuccess />,
+  // },
+  // {
+  //   path: '/reset-password-success',
+  //   element: <ResetPasswordSuccess />,
+  // },
 
-  {
-    path: '/profile',
-    element: (
-      <ProtectToLogin>
-        <ProfilePage />
-      </ProtectToLogin>
-    ),
-  },
-  {
-    path: '/add-university',
-    element: (
-      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
-        <AddUniversityPage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/edit-university/:universityId',
-    element: (
-      <AuthorizeAccess role={['ADMIN']}>
-        <EditUniversityPage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/add-paper/:universityId',
-    element: (
-      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
-        <AddPaperPage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/edit-paper/:paperId',
-    element: (
-      <AuthorizeAccess role={['ADMIN']}>
-        <EditPaperPage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/add-course/:universityId',
-    element: (
-      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
-        <AddCoursePage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/edit-course/:courseId',
-    element: (
-      <AuthorizeAccess role={['ADMIN']}>
-        <EditCoursePage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/details/:universityId',
-    element: (
-      <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
-        <DetailsPage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/dashboard',
-    element: (
-      <AuthorizeAccess role={['ADMIN']}>
-        <DashboardPage />
-      </AuthorizeAccess>
-    ),
-  },
-  {
-    path: '/contribute',
-    element: <ContributePage />,
-  },
+  // {
+  //   path: '/profile',
+  //   element: (
+  //     <ProtectToLogin>
+  //       <ProfilePage />
+  //     </ProtectToLogin>
+  //   ),
+  // },
+  // {
+  //   path: '/add-university',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+  //       <AddUniversityPage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/edit-university/:universityId',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN']}>
+  //       <EditUniversityPage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/add-paper/:universityId',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+  //       <AddPaperPage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/edit-paper/:paperId',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN']}>
+  //       <EditPaperPage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/add-course/:universityId',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+  //       <AddCoursePage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/edit-course/:courseId',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN']}>
+  //       <EditCoursePage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/details/:universityId',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN', 'MANAGER']}>
+  //       <DetailsPage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/dashboard',
+  //   element: (
+  //     <AuthorizeAccess role={['ADMIN']}>
+  //       <DashboardPage />
+  //     </AuthorizeAccess>
+  //   ),
+  // },
+  // {
+  //   path: '/contribute',
+  //   element: <ContributePage />,
+  // },
 ]);
 
 function App() {
@@ -183,15 +184,15 @@ function App() {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchUserAsync());
-  }, [isAuthenticated]);
+  // useEffect(() => {
+  //   dispatch(fetchUserAsync());
+  // }, [isAuthenticated]);
 
-  useEffect(() => {
-    if (!alreadyVisited) {
-      updateUserVisit();
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (!alreadyVisited) {
+  //     updateUserVisit();
+  //   }
+  // }, []);
 
   return (
     <>
